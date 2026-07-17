@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Habilidades Directivas I · MGTO BA01</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #101b22;
+    --navy: #123a4d;
+    --navy-deep: #0c2733;
+    --paper: #f4f6f5;
+    --paper-raised: #ffffff;
+    --teal: #1c7c74;
+    --teal-deep: #145f59;
+    --gold: #b8862b;
+    --gold-deep: #93691f;
+    --line: #d7dfe1;
+    --muted: #5c6b70;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  .mono { font-family: 'IBM Plex Mono', monospace; }
+  a { color: inherit; }
+  img, svg { display: block; max-width: 100%; }
+
+  /* -------- header -------- */
+  header {
+    background: var(--navy-deep);
+    color: #eaf1f0;
+    padding: 16px 6vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .brand { display: flex; align-items: baseline; gap: 10px; }
+  .brand-code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--gold);
+    border: 1px solid rgba(184,134,43,0.5);
+    padding: 3px 8px;
+    border-radius: 3px;
+  }
+  .brand-name { font-size: 0.85rem; color: #cfe0dd; letter-spacing: 0.02em; }
+  header .program {
+    font-size: 0.72rem;
+    color: #8fa6a3;
+    text-align: right;
+    max-width: 260px;
+    display: none;
+  }
+  @media (min-width: 720px) { header .program { display: block; } }
+
+  /* -------- hero -------- */
+  .hero {
+    position: relative;
+    padding: 72px 6vw 56px;
+    max-width: 1180px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 40px;
+    align-items: center;
+  }
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; padding-top: 48px; }
+  }
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--teal-deep);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .eyebrow::before {
+    content: '';
+    width: 22px; height: 1px;
+    background: var(--teal-deep);
+    display: inline-block;
+  }
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: clamp(2.1rem, 4.4vw, 3.1rem);
+    line-height: 1.12;
+    color: var(--navy-deep);
+    letter-spacing: -0.01em;
+  }
+  h1 em { font-style: italic; color: var(--teal-deep); font-weight: 500; }
+  .hero-sub {
+    margin-top: 20px;
+    font-size: 1.02rem;
+    color: var(--muted);
+    max-width: 46ch;
+  }
+  .hero-meta {
+    margin-top: 28px;
+    display: flex;
+    gap: 22px;
+    flex-wrap: wrap;
+  }
+  .hero-meta div { font-size: 0.78rem; color: var(--muted); }
+  .hero-meta strong {
+    display: block;
+    font-family: 'Fraunces', serif;
+    font-size: 1.15rem;
+    color: var(--navy);
+    font-weight: 600;
+  }
+
+  /* -------- network signature -------- */
+  .network-wrap { position: relative; }
+  .network-wrap svg { width: 100%; height: auto; }
+  .node { transition: opacity 0.6s ease; }
+  .edge { stroke-dasharray: 240; stroke-dashoffset: 240; transition: stroke-dashoffset 1.1s ease; }
+  .network-wrap.revealed .edge { stroke-dashoffset: 0; }
+  .network-wrap.revealed .node { opacity: 1; }
+  .network-wrap .node { opacity: 0; }
+  @media (prefers-reduced-motion: reduce) {
+    .edge, .node { transition: none !important; stroke-dashoffset: 0 !important; opacity: 1 !important; }
+  }
+
+  /* -------- section shared -------- */
+  section { padding: 0 6vw; max-width: 1180px; margin: 0 auto; }
+  .section-head { text-align: left; margin-bottom: 30px; }
+  .section-head h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.7rem;
+    color: var(--navy-deep);
+  }
+  .section-head p { color: var(--muted); margin-top: 8px; max-width: 60ch; font-size: 0.95rem; }
+
+  /* -------- tool cards -------- */
+  .tools { padding-top: 58px; padding-bottom: 20px; }
+  .tool-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+  }
+  @media (max-width: 780px) { .tool-grid { grid-template-columns: 1fr; } }
+
+  .tool-card {
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 30px 28px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+  .tool-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  }
+  .tool-card.teal::before { background: var(--teal); }
+  .tool-card.gold::before { background: var(--gold); }
+
+  .tool-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .tool-card.teal .tool-eyebrow { color: var(--teal-deep); }
+  .tool-card.gold .tool-eyebrow { color: var(--gold-deep); }
+
+  .tool-card h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--navy-deep);
+    margin-bottom: 4px;
+  }
+  .tool-card .tool-tag { font-size: 0.82rem; color: var(--muted); font-style: italic; margin-bottom: 16px; }
+  .tool-card p.desc { font-size: 0.9rem; color: var(--muted); flex-grow: 1; }
+
+  .tool-stats {
+    display: flex; gap: 18px; margin: 18px 0 22px;
+    padding-top: 16px; border-top: 1px solid var(--line);
+  }
+  .tool-stats div { font-size: 0.72rem; color: var(--muted); }
+  .tool-stats strong { display: block; font-family: 'IBM Plex Mono', monospace; font-size: 0.95rem; color: var(--navy); }
+
+  .tool-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    padding: 12px 20px;
+    border-radius: 3px;
+    color: #fff;
+    width: fit-content;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .tool-card.teal .tool-btn { background: var(--teal); }
+  .tool-card.gold .tool-btn { background: var(--gold); }
+  .tool-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
+  .tool-btn:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
+
+  /* -------- why section -------- */
+  .why {
+    margin-top: 60px;
+    background: var(--navy-deep);
+    color: #dfe9e7;
+    border-radius: 4px;
+    padding: 40px 6vw;
+    max-width: none;
+  }
+  .why-inner { max-width: 1120px; margin: 0 auto; }
+  .why h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 22px;
+  }
+  .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+  @media (max-width: 780px) { .why-grid { grid-template-columns: 1fr; } }
+  .why-col .label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .why-col.c-teal .label { color: #6ecbc2; }
+  .why-col.c-gold .label { color: #e0bd76; }
+  .why-col p { font-size: 0.92rem; color: #b9cbc8; }
+
+  /* -------- footer -------- */
+  footer {
+    margin-top: 70px;
+    border-top: 1px solid var(--line);
+    padding: 28px 6vw 40px;
+  }
+  .footer-inner {
+    max-width: 1180px; margin: 0 auto;
+    display: flex; flex-wrap: wrap; gap: 24px;
+    justify-content: space-between;
+    font-size: 0.76rem; color: var(--muted);
+  }
+  .footer-inner .fcol strong { display: block; color: var(--navy); font-size: 0.8rem; margin-bottom: 4px; }
+  .footer-note {
+    max-width: 1180px; margin: 20px auto 0;
+    font-size: 0.72rem; color: #93a2a5;
+    border-top: 1px dashed var(--line); padding-top: 16px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <span class="brand-code">MGTO BA01</span>
+    <span class="brand-name">Habilidades Directivas I</span>
+  </div>
+  <div class="program">Magíster en Dirección y Gestión Estratégica en Salud · USS</div>
+</header>
+
+<div class="hero">
+  <div>
+    <div class="eyebrow">Instrumentos de autodiagnóstico</div>
+    <h1>Antes de dirigir equipos<br>en salud, <em>conócete</em><br>como líder.</h1>
+    <p class="hero-sub">Dos instrumentos breves para identificar el rol que aportas a un equipo y el estilo con el que ejerces influencia como líder — la base para las Unidades 1 y 3 del módulo.</p>
+    <div class="hero-meta">
+      <div><strong>2</strong>instrumentos</div>
+      <div><strong>~25 min</strong>tiempo total</div>
+      <div><strong>Trimestre 2</strong>online</div>
+    </div>
+  </div>
+  <div class="network-wrap" id="networkWrap">
+    <svg viewBox="0 0 340 300" xmlns="http://www.w3.org/2000/svg">
+      <line class="edge" x1="170" y1="150" x2="80" y2="70" stroke="#1c7c74" stroke-width="1.4"/>
+      <line class="edge" x1="170" y1="150" x2="260" y2="70" stroke="#b8862b" stroke-width="1.4"/>
+      <line class="edge" x1="170" y1="150" x2="60" y2="180" stroke="#c9d3d4" stroke-width="1.2"/>
+      <line class="edge" x1="170" y1="150" x2="280" y2="190" stroke="#c9d3d4" stroke-width="1.2"/>
+      <line class="edge" x1="170" y1="150" x2="120" y2="250" stroke="#c9d3d4" stroke-width="1.2"/>
+      <line class="edge" x1="170" y1="150" x2="220" y2="250" stroke="#c9d3d4" stroke-width="1.2"/>
+      <line class="edge" x1="80" y1="70" x2="60" y2="180" stroke="#dbe2e3" stroke-width="1"/>
+      <line class="edge" x1="260" y1="70" x2="280" y2="190" stroke="#dbe2e3" stroke-width="1"/>
+
+      <circle class="node" cx="170" cy="150" r="15" fill="#123a4d"/>
+      <text x="170" y="154" text-anchor="middle" fill="#fff" font-size="9" font-family="IBM Plex Mono, monospace">TÚ</text>
+
+      <circle class="node" cx="80" cy="70" r="10" fill="#1c7c74"/>
+      <circle class="node" cx="260" cy="70" r="10" fill="#b8862b"/>
+      <circle class="node" cx="60" cy="180" r="6" fill="#c9d3d4"/>
+      <circle class="node" cx="280" cy="190" r="6" fill="#c9d3d4"/>
+      <circle class="node" cx="120" cy="250" r="6" fill="#c9d3d4"/>
+      <circle class="node" cx="220" cy="250" r="6" fill="#c9d3d4"/>
+
+      <text class="node" x="80" y="50" text-anchor="middle" fill="#145f59" font-size="10" font-family="IBM Plex Mono, monospace">ROL</text>
+      <text class="node" x="260" y="50" text-anchor="middle" fill="#93691f" font-size="10" font-family="IBM Plex Mono, monospace">ESTILO</text>
+    </svg>
+  </div>
+</div>
+
+<section class="tools">
+  <div class="section-head">
+    <h2>Elige un instrumento</h2>
+    <p>Puedes hacer ambos en cualquier orden. Cada uno toma entre 10 y 15 minutos y tu resultado queda disponible en la vista de equipo del curso.</p>
+  </div>
+  <div class="tool-grid">
+
+    <div class="tool-card teal">
+      <div class="tool-eyebrow">Diagnóstico de rol · Unidad 1</div>
+      <h3>Roles de Equipo</h3>
+      <div class="tool-tag">Inventario de Belbin</div>
+      <p class="desc">Identifica qué aportas naturalmente a un equipo de trabajo: ¿coordinas, generas ideas, cierras tareas, sostienes al grupo? Reparte 10 puntos entre 8 afirmaciones en 7 secciones breves.</p>
+      <div class="tool-stats">
+        <div><strong>7</strong>secciones</div>
+        <div><strong>~15 min</strong>duración</div>
+        <div><strong>9</strong>roles posibles</div>
+      </div>
+      <a class="tool-btn" href="belbin_test.html">Iniciar test de roles →</a>
+    </div>
+
+    <div class="tool-card gold">
+      <div class="tool-eyebrow">Diagnóstico de estilo · Unidad 3</div>
+      <h3>Estilos de Liderazgo</h3>
+      <div class="tool-tag">Modelo de Goleman</div>
+      <p class="desc">Identifica cómo ejerces influencia cuando lideras: ¿inspiras una visión, formas a tu equipo, buscas consenso o exiges resultados? 30 afirmaciones con escala de frecuencia.</p>
+      <div class="tool-stats">
+        <div><strong>30</strong>afirmaciones</div>
+        <div><strong>~10 min</strong>duración</div>
+        <div><strong>6</strong>estilos posibles</div>
+      </div>
+      <a class="tool-btn" href="liderazgo_test.html">Iniciar test de liderazgo →</a>
+    </div>
+
+  </div>
+</section>
+
+<section>
+  <div class="why">
+    <div class="why-inner">
+      <h2>Por qué dos instrumentos y no uno</h2>
+      <div class="why-grid">
+        <div class="why-col c-teal">
+          <div class="label">Belbin — qué aportas</div>
+          <p>Describe tu contribución natural dentro de un equipo: la función que cumples cuando trabajas junto a otros, más allá de tu cargo formal. Es la base para formar equipos multidisciplinarios balanceados, como los que vas a dirigir en salud.</p>
+        </div>
+        <div class="why-col c-gold">
+          <div class="label">Goleman — cómo influyes</div>
+          <p>Describe tu forma de ejercer liderazgo: cómo tomas decisiones, das dirección y respondes bajo presión. Ningún estilo es superior en abstracto — los líderes más efectivos alternan entre varios según la situación que enfrentan.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="fcol">
+      <strong>Módulo</strong>
+      Habilidades Directivas I · MGTO BA01<br>D.R. N°67/2025 · Modular
+    </div>
+    <div class="fcol">
+      <strong>Programa</strong>
+      Magíster en Dirección y Gestión Estratégica en Salud<br>Facultad de Economía, Negocios y Gobierno
+    </div>
+    <div class="fcol">
+      <strong>Créditos</strong>
+      3 SCT · 12 semanas · Modalidad online
+    </div>
+  </div>
+  <p class="footer-note">Tu nombre y resultados quedan visibles para el resto del curso en la vista de equipo de cada instrumento. Universidad San Sebastián.</p>
+</footer>
+
+<script>
+  const wrap = document.getElementById('networkWrap');
+  requestAnimationFrame(() => requestAnimationFrame(() => wrap.classList.add('revealed')));
+</script>
+
+</body>
+</html>
