@@ -3,91 +3,168 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Test de Roles de Belbin</title>
+<title>Roles de Equipo · Test de Belbin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+  :root {
+    --ink: #101b22;
+    --navy: #123a4d;
+    --navy-deep: #0c2733;
+    --paper: #f4f6f5;
+    --paper-raised: #ffffff;
+    --teal: #1c7c74;
+    --teal-deep: #145f59;
+    --gold: #b8862b;
+    --gold-deep: #93691f;
+    --line: #d7dfe1;
+    --muted: #5c6b70;
+  }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; color: #1a202c; min-height: 100vh; }
+  body { font-family: 'Inter', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; padding-left: 64px; line-height: 1.5; }
 
-  .header { background: linear-gradient(135deg, #2b6cb0, #4299e1); color: white; padding: 28px 24px; text-align: center; }
-  .header h1 { font-size: 1.6rem; font-weight: 700; }
-  .header p { font-size: 0.9rem; opacity: 0.85; margin-top: 6px; }
+  .site-sidebar {
+    position: fixed; top: 0; left: 0; bottom: 0; width: 64px;
+    background: var(--navy-deep);
+    display: flex; flex-direction: column; align-items: center;
+    padding-top: 22px; gap: 4px; z-index: 100;
+    border-right: 1px solid rgba(255,255,255,0.06);
+  }
+  .site-sidebar a {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    text-decoration: none; color: #cfe0dd; padding: 10px 4px; border-radius: 6px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; letter-spacing: 0.04em;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .site-sidebar a:hover, .site-sidebar a.active { background: rgba(255,255,255,0.08); color: #fff; }
+  .site-sidebar svg { width: 18px; height: 18px; }
+  @media (max-width: 600px) {
+    body { padding-left: 48px; }
+    .site-sidebar { width: 48px; }
+    .site-sidebar a span { display: none; }
+  }
 
-  .container { max-width: 760px; margin: 0 auto; padding: 24px 16px 60px; }
+  .page-head { max-width: 760px; margin: 0 auto; padding: 56px 6vw 8px; }
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--teal-deep); margin-bottom: 12px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .eyebrow::before { content: ''; width: 22px; height: 1px; background: var(--teal-deep); display: inline-block; }
+  .page-head h1 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: clamp(1.7rem, 3.6vw, 2.2rem); color: var(--navy-deep); letter-spacing: -0.01em;
+  }
+  .page-head .lede { margin-top: 10px; font-size: 0.92rem; color: var(--muted); max-width: 58ch; }
 
-  .progress-bar-wrap { background: #e2e8f0; border-radius: 99px; height: 8px; margin-bottom: 8px; }
-  .progress-bar { background: linear-gradient(90deg, #2b6cb0, #63b3ed); height: 8px; border-radius: 99px; transition: width 0.4s ease; }
-  .progress-label { font-size: 0.8rem; color: #718096; margin-bottom: 20px; text-align: right; }
+  .container { max-width: 760px; margin: 0 auto; padding: 24px 6vw 80px; }
 
-  .section-card { background: white; border-radius: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); padding: 24px; margin-bottom: 24px; }
-  .section-title { font-size: 1rem; font-weight: 700; color: #2b6cb0; margin-bottom: 4px; }
-  .section-subtitle { font-size: 0.85rem; color: #718096; margin-bottom: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; }
-  .instruction { font-size: 0.82rem; color: #e53e3e; font-weight: 600; margin-bottom: 14px; }
+  .progress-bar-wrap { background: var(--line); border-radius: 99px; height: 6px; margin-bottom: 8px; }
+  .progress-bar { background: var(--teal); height: 6px; border-radius: 99px; transition: width 0.4s ease; }
+  .progress-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: var(--muted); margin-bottom: 20px; text-align: right; }
+
+  .section-card {
+    background: var(--paper-raised); border: 1px solid var(--line); border-top: 3px solid var(--teal);
+    border-radius: 4px; padding: 26px 24px; margin-bottom: 22px;
+  }
+  .section-title { font-family: 'Fraunces', serif; font-size: 1.1rem; font-weight: 600; color: var(--navy-deep); margin-bottom: 4px; }
+  .section-subtitle { font-size: 0.85rem; color: var(--muted); margin-bottom: 16px; border-bottom: 1px solid var(--line); padding-bottom: 12px; }
+  .instruction { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: var(--gold-deep); font-weight: 600; margin-bottom: 14px; letter-spacing: 0.02em; }
 
   .statement { margin-bottom: 14px; }
-  .statement label { display: flex; align-items: flex-start; gap: 10px; font-size: 0.88rem; cursor: pointer; }
-  .statement label:hover { color: #2b6cb0; }
-  .statement input[type=range] { width: 100%; margin-top: 4px; accent-color: #2b6cb0; }
-  .statement-text { flex: 1; line-height: 1.45; }
-  .score-display { min-width: 28px; font-weight: 700; color: #2b6cb0; text-align: center; font-size: 0.95rem; }
+  .statement input[type=range] { width: 100%; margin-top: 4px; accent-color: var(--teal); }
+  .score-display { min-width: 28px; font-weight: 700; color: var(--teal-deep); text-align: center; font-size: 0.95rem; }
 
   .slider-row { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
   .slider-wrap { flex: 1; }
-  .slider-labels { display: flex; justify-content: space-between; font-size: 0.7rem; color: #a0aec0; margin-top: 2px; }
+  .slider-labels { display: flex; justify-content: space-between; font-size: 0.7rem; color: #a9b6b8; margin-top: 2px; }
 
-  .total-display { text-align: right; font-size: 0.82rem; margin-top: 10px; }
-  .total-display span { font-weight: 700; color: #2b6cb0; }
-  .total-display.over span { color: #e53e3e; }
+  .total-display { text-align: right; font-size: 0.82rem; margin-top: 10px; color: var(--muted); }
+  .total-display span { font-weight: 700; color: var(--teal-deep); }
+  .total-display.over span { color: #b0413e; }
 
-  .btn { display: block; width: 100%; padding: 14px; background: linear-gradient(135deg, #2b6cb0, #4299e1); color: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 10px; letter-spacing: 0.3px; transition: opacity 0.2s; }
-  .btn:hover { opacity: 0.9; }
+  .btn {
+    display: block; width: 100%; padding: 13px; background: var(--teal); color: #fff; border: none;
+    border-radius: 3px; font-size: 0.92rem; font-weight: 600; cursor: pointer; margin-top: 10px;
+    letter-spacing: 0.01em; transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.2s;
+  }
+  .btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
   .btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
   /* Results */
-  .results { display: none; background: white; border-radius: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); padding: 28px; }
-  .results h2 { font-size: 1.3rem; font-weight: 700; color: #2b6cb0; margin-bottom: 6px; }
-  .results .subtitle { font-size: 0.85rem; color: #718096; margin-bottom: 24px; }
+  .results { display: none; background: var(--paper-raised); border: 1px solid var(--line); border-top: 3px solid var(--teal); border-radius: 4px; padding: 30px 26px; }
+  .results h2 { font-family: 'Fraunces', serif; font-size: 1.35rem; font-weight: 600; color: var(--navy-deep); margin-bottom: 6px; }
+  .results .subtitle { font-size: 0.85rem; color: var(--muted); margin-bottom: 24px; }
 
-  .role-card { border-radius: 12px; padding: 18px; margin-bottom: 14px; border-left: 5px solid; }
-  .role-card.first { background: #ebf8ff; border-color: #2b6cb0; }
-  .role-card.second { background: #f0fff4; border-color: #38a169; }
-  .role-card.third { background: #fffff0; border-color: #d69e2e; }
+  .role-card { border-radius: 4px; padding: 18px; margin-bottom: 14px; border: 1px solid var(--line); border-left: 4px solid; }
+  .role-card.first { background: #f2f8f7; border-left-color: var(--teal); }
+  .role-card.second { background: #fbf6ec; border-left-color: var(--gold); }
+  .role-card.third { background: #f4f6f7; border-left-color: var(--navy); }
 
   .role-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-  .role-name { font-weight: 700; font-size: 1rem; }
-  .role-category { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.7; margin-top: 1px; }
-  .role-score { font-size: 1.5rem; font-weight: 800; color: #2b6cb0; }
-  .role-desc { font-size: 0.84rem; line-height: 1.55; color: #4a5568; margin-bottom: 8px; }
-  .role-strengths { font-size: 0.8rem; color: #2d3748; }
-  .role-strengths strong { color: #2b6cb0; }
+  .role-name { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.05rem; color: var(--navy-deep); }
+  .role-category { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-top: 2px; }
+  .role-score { font-family: 'IBM Plex Mono', monospace; font-size: 1.3rem; font-weight: 600; color: var(--navy-deep); }
+  .role-desc { font-size: 0.85rem; line-height: 1.55; color: var(--muted); margin-bottom: 8px; }
+  .role-strengths { font-size: 0.8rem; color: var(--ink); }
+  .role-strengths strong { color: var(--navy-deep); }
 
-  .badge { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 0.72rem; font-weight: 600; margin-top: 4px; }
-  .badge-1 { background: #bee3f8; color: #2a69ac; }
-  .badge-2 { background: #c6f6d5; color: #276749; }
-  .badge-3 { background: #fefcbf; color: #975a16; }
+  .badge { display: inline-block; padding: 3px 9px; border-radius: 3px; font-family: 'IBM Plex Mono', monospace; font-size: 0.66rem; font-weight: 600; letter-spacing: 0.03em; margin-top: 4px; }
+  .badge-1 { background: #dcefec; color: var(--teal-deep); }
+  .badge-2 { background: #f3e7cd; color: var(--gold-deep); }
+  .badge-3 { background: #dde3e6; color: var(--navy); }
 
   .bar-chart { margin: 24px 0; }
   .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-  .bar-label { width: 130px; font-size: 0.78rem; color: #4a5568; text-align: right; flex-shrink: 0; }
-  .bar-bg { flex: 1; background: #e2e8f0; border-radius: 99px; height: 18px; overflow: hidden; }
-  .bar-fill { height: 100%; border-radius: 99px; transition: width 0.8s ease; display: flex; align-items: center; justify-content: flex-end; padding-right: 6px; font-size: 0.7rem; font-weight: 700; color: white; }
-  .bar-val { width: 28px; font-size: 0.78rem; font-weight: 700; color: #2b6cb0; }
+  .bar-label { width: 140px; font-size: 0.78rem; color: var(--muted); text-align: right; flex-shrink: 0; }
+  .bar-bg { flex: 1; background: var(--line); border-radius: 99px; height: 16px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 99px; transition: width 0.8s ease; display: flex; align-items: center; justify-content: flex-end; padding-right: 6px; font-size: 0.68rem; font-weight: 700; color: #fff; }
+  .bar-val { width: 28px; font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; font-weight: 700; color: var(--navy-deep); }
 
-  .restart-btn { margin-top: 20px; background: white; color: #2b6cb0; border: 2px solid #2b6cb0; border-radius: 10px; padding: 12px; font-size: 0.95rem; font-weight: 700; cursor: pointer; width: 100%; transition: all 0.2s; }
-  .restart-btn:hover { background: #ebf8ff; }
+  .restart-btn {
+    margin-top: 20px; background: #fff; color: var(--navy-deep); border: 1px solid var(--line);
+    border-radius: 3px; padding: 12px; font-size: 0.88rem; font-weight: 600; cursor: pointer; width: 100%;
+    transition: all 0.2s;
+  }
+  .restart-btn:hover { background: var(--paper); border-color: var(--teal); }
 
-  .intro-card { background: white; border-radius: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); padding: 28px; margin-bottom: 24px; }
-  .intro-card h2 { color: #2b6cb0; margin-bottom: 12px; }
-  .intro-card p { font-size: 0.88rem; line-height: 1.6; color: #4a5568; margin-bottom: 10px; }
+  .intro-card { background: var(--paper-raised); border: 1px solid var(--line); border-top: 3px solid var(--teal); border-radius: 4px; padding: 28px 26px; margin-bottom: 24px; }
+  .intro-card h2 { font-family: 'Fraunces', serif; font-weight: 600; color: var(--navy-deep); margin-bottom: 12px; font-size: 1.2rem; }
+  .intro-card p { font-size: 0.88rem; line-height: 1.6; color: var(--muted); margin-bottom: 10px; }
   .roles-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 14px 0; }
-  .role-chip { background: #ebf8ff; border-radius: 8px; padding: 8px 10px; font-size: 0.78rem; }
-  .role-chip strong { color: #2b6cb0; display: block; }
+  .role-chip { background: var(--paper); border: 1px solid var(--line); border-radius: 3px; padding: 8px 10px; font-size: 0.78rem; color: var(--muted); }
+  .role-chip strong { color: var(--navy-deep); display: block; font-weight: 600; }
+
+  input[type=text] { width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 3px; font-size: 0.9rem; font-family: 'Inter', sans-serif; }
 </style>
 </head>
 <body>
+<nav class="site-sidebar">
+  <a href="index.html" title="Inicio">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+    <span>Inicio</span>
+  </a>
+  <a href="belbin_test.html" class="active" title="Test de Roles de Equipo (Belbin)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    <span>Roles</span>
+  </a>
+  <a href="liderazgo_test.html" title="Test de Estilos de Liderazgo (Goleman)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+    <span>Liderazgo</span>
+  </a>
+  <a href="https://www.16personalities.com/es" target="_blank" rel="noopener noreferrer" title="16Personalities (recurso externo)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+    <span>16P</span>
+  </a>
+</nav>
 
-<div class="header">
-  <h1>🎯 Test de Roles de Equipo de Belbin</h1>
-  <p>Descubre tu perfil de contribución en equipos de trabajo</p>
+
+<div class="page-head">
+  <div class="eyebrow">MGTO BA01 · Habilidades Directivas I</div>
+  <h1>Roles de Equipo (Belbin)</h1>
+  <p class="lede">Descubre tu perfil de contribución dentro de un equipo de trabajo.</p>
 </div>
 
 <div class="container" id="app">
@@ -134,6 +211,13 @@
 </div>
 
 <script>
+// ============================================================
+// CONFIGURACIÓN — pega aquí la URL de tu Google Apps Script
+// (Extensiones > Apps Script > Implementar > Nueva implementación)
+// Debe terminar en /exec
+// ============================================================
+const APPS_SCRIPT_URL = 'PEGA_AQUI_TU_URL_DE_APPS_SCRIPT';
+
 // ============================================================
 // BELBIN TEST DATA — 7 sections × 8 statements
 // Each statement maps to a role code
@@ -297,7 +381,7 @@ function renderSection(idx) {
     row.className = 'statement';
     row.innerHTML = `
       <div style="font-size:0.88rem;line-height:1.45;color:#2d3748;margin-bottom:4px;">
-        <span style="font-weight:700;color:#2b6cb0;">${String.fromCharCode(65+i)}.</span> ${item.text}
+        <span style="font-weight:700;color:#145f59;">${String.fromCharCode(65+i)}.</span> ${item.text}
       </div>
       <div class="slider-row">
         <span style="font-size:0.75rem;color:#a0aec0;width:14px;text-align:center;">0</span>
@@ -408,7 +492,7 @@ function showResults() {
     html += `
       <div class="bar-row">
         <div class="bar-label">${r.name}</div>
-        <div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:${colors[code] || '#2b6cb0'}">${score > 0 ? score : ''}</div></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:${colors[code] || '#1c7c74'}">${score > 0 ? score : ''}</div></div>
         <div class="bar-val">${score}</div>
       </div>
     `;
@@ -440,6 +524,10 @@ function showResults() {
 
 async function saveResultToTeam(sorted) {
   const statusEl = document.getElementById('saveStatus');
+  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.indexOf('PEGA_AQUI') !== -1) {
+    if (statusEl) statusEl.textContent = '⚠️ Falta configurar APPS_SCRIPT_URL en el código para guardar en el equipo.';
+    return;
+  }
   try {
     const record = {
       name: studentName,
@@ -447,12 +535,15 @@ async function saveResultToTeam(sorted) {
       allScores: sorted.map(([code, score]) => ({ code, score })),
       savedAt: new Date().toISOString()
     };
-    const key = 'belbin:' + studentName.toLowerCase().replace(/\s+/g, '_');
-    await window.storage.set(key, JSON.stringify(record), true);
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // evita preflight CORS
+      body: JSON.stringify({ action: 'save', record })
+    });
     if (statusEl) statusEl.textContent = '✅ Resultado guardado para la vista de equipo.';
   } catch (err) {
     if (statusEl) statusEl.textContent = '⚠️ No se pudo guardar el resultado (puedes seguir viendo tu perfil igual).';
-    console.error('Storage error:', err);
+    console.error('Save error:', err);
   }
 }
 
@@ -464,25 +555,18 @@ async function showTeamView() {
   teamEl.style.display = 'block';
   teamEl.innerHTML = '<h2>👥 Resultados del Equipo</h2><p class="subtitle">Cargando...</p>';
 
-  try {
-    const listResult = await window.storage.list('belbin:', true);
-    const keys = (listResult && listResult.keys) || [];
-    if (keys.length === 0) {
-      teamEl.innerHTML = `
-        <h2>👥 Resultados del Equipo</h2>
-        <p class="subtitle">Todavía nadie ha completado el test en este curso.</p>
-        <button class="restart-btn" onclick="backToIntro()">↩ Volver</button>
-      `;
-      return;
-    }
+  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.indexOf('PEGA_AQUI') !== -1) {
+    teamEl.innerHTML = `
+      <h2>👥 Resultados del Equipo</h2>
+      <p class="subtitle">⚠️ Falta configurar APPS_SCRIPT_URL en el código para ver el equipo.</p>
+      <button class="restart-btn" onclick="backToIntro()">↩ Volver</button>
+    `;
+    return;
+  }
 
-    const records = [];
-    for (const k of keys) {
-      try {
-        const r = await window.storage.get(k, true);
-        if (r && r.value) records.push(JSON.parse(r.value));
-      } catch (e) { /* skip missing/broken key */ }
-    }
+  try {
+    const resp = await fetch(APPS_SCRIPT_URL + '?action=list');
+    const records = await resp.json();
 
     // Contar cuántas personas tienen cada rol como su Nº1
     const primaryCount = {};
