@@ -22,60 +22,43 @@
     --muted: #5c6b70;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
   body {
     font-family: 'Inter', sans-serif;
     background: var(--paper);
     color: var(--ink);
     line-height: 1.5;
+    padding-left: 64px;
   }
-  .mono { font-family: 'IBM Plex Mono', monospace; }
   a { color: inherit; }
-  img, svg { display: block; max-width: 100%; }
+  svg { display: block; }
 
-  /* -------- header -------- */
-  header {
+  /* -------- sidebar -------- */
+  .site-sidebar {
+    position: fixed; top: 0; left: 0; bottom: 0; width: 64px;
     background: var(--navy-deep);
-    color: #eaf1f0;
-    padding: 16px 6vw;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    display: flex; flex-direction: column; align-items: center;
+    padding-top: 22px; gap: 4px; z-index: 100;
+    border-right: 1px solid rgba(255,255,255,0.06);
   }
-  .brand { display: flex; align-items: baseline; gap: 10px; }
-  .brand-code {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
-    color: var(--gold);
-    border: 1px solid rgba(184,134,43,0.5);
-    padding: 3px 8px;
-    border-radius: 3px;
+  .site-sidebar a {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    text-decoration: none; color: #cfe0dd; padding: 10px 4px; border-radius: 6px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; letter-spacing: 0.04em;
+    transition: background 0.15s ease, color 0.15s ease;
   }
-  .brand-name { font-size: 0.85rem; color: #cfe0dd; letter-spacing: 0.02em; }
-  header .program {
-    font-size: 0.72rem;
-    color: #8fa6a3;
-    text-align: right;
-    max-width: 260px;
-    display: none;
+  .site-sidebar a:hover, .site-sidebar a.active { background: rgba(255,255,255,0.08); color: #fff; }
+  .site-sidebar svg { width: 18px; height: 18px; }
+  @media (max-width: 600px) {
+    body { padding-left: 48px; }
+    .site-sidebar { width: 48px; }
+    .site-sidebar a span { display: none; }
   }
-  @media (min-width: 720px) { header .program { display: block; } }
 
-  /* -------- hero -------- */
-  .hero {
-    position: relative;
-    padding: 72px 6vw 56px;
-    max-width: 1180px;
+  /* -------- main -------- */
+  main {
+    max-width: 880px;
     margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
-    gap: 40px;
-    align-items: center;
-  }
-  @media (max-width: 860px) {
-    .hero { grid-template-columns: 1fr; padding-top: 48px; }
+    padding: 64px 6vw 80px;
   }
   .eyebrow {
     font-family: 'IBM Plex Mono', monospace;
@@ -83,315 +66,139 @@
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--teal-deep);
-    margin-bottom: 16px;
+    margin-bottom: 14px;
     display: flex;
     align-items: center;
     gap: 10px;
   }
-  .eyebrow::before {
-    content: '';
-    width: 22px; height: 1px;
-    background: var(--teal-deep);
-    display: inline-block;
-  }
+  .eyebrow::before { content: ''; width: 22px; height: 1px; background: var(--teal-deep); display: inline-block; }
   h1 {
     font-family: 'Fraunces', serif;
     font-weight: 600;
-    font-size: clamp(2.1rem, 4.4vw, 3.1rem);
-    line-height: 1.12;
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    line-height: 1.15;
     color: var(--navy-deep);
     letter-spacing: -0.01em;
   }
-  h1 em { font-style: italic; color: var(--teal-deep); font-weight: 500; }
-  .hero-sub {
+  .instructions {
     margin-top: 20px;
-    font-size: 1.02rem;
+    font-size: 0.98rem;
     color: var(--muted);
-    max-width: 46ch;
+    max-width: 62ch;
   }
-  .hero-meta {
-    margin-top: 28px;
-    display: flex;
-    gap: 22px;
-    flex-wrap: wrap;
-  }
-  .hero-meta div { font-size: 0.78rem; color: var(--muted); }
-  .hero-meta strong {
-    display: block;
-    font-family: 'Fraunces', serif;
-    font-size: 1.15rem;
-    color: var(--navy);
-    font-weight: 600;
-  }
-
-  /* -------- network signature -------- */
-  .network-wrap { position: relative; }
-  .network-wrap svg { width: 100%; height: auto; }
-  .node { transition: opacity 0.6s ease; }
-  .edge { stroke-dasharray: 240; stroke-dashoffset: 240; transition: stroke-dashoffset 1.1s ease; }
-  .network-wrap.revealed .edge { stroke-dashoffset: 0; }
-  .network-wrap.revealed .node { opacity: 1; }
-  .network-wrap .node { opacity: 0; }
-  @media (prefers-reduced-motion: reduce) {
-    .edge, .node { transition: none !important; stroke-dashoffset: 0 !important; opacity: 1 !important; }
-  }
-
-  /* -------- section shared -------- */
-  section { padding: 0 6vw; max-width: 1180px; margin: 0 auto; }
-  .section-head { text-align: left; margin-bottom: 30px; }
-  .section-head h2 {
-    font-family: 'Fraunces', serif;
-    font-weight: 600;
-    font-size: 1.7rem;
-    color: var(--navy-deep);
-  }
-  .section-head p { color: var(--muted); margin-top: 8px; max-width: 60ch; font-size: 0.95rem; }
+  .instructions p + p { margin-top: 10px; }
 
   /* -------- tool cards -------- */
-  .tools { padding-top: 58px; padding-bottom: 20px; }
   .tool-grid {
+    margin-top: 44px;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: 22px;
   }
-  @media (max-width: 780px) { .tool-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 980px) { .tool-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 620px) { .tool-grid { grid-template-columns: 1fr; } }
 
   .tool-card {
     background: var(--paper-raised);
     border: 1px solid var(--line);
     border-radius: 4px;
-    padding: 30px 28px;
+    padding: 28px 24px;
     display: flex;
     flex-direction: column;
     position: relative;
     overflow: hidden;
   }
-  .tool-card::before {
-    content: '';
-    position: absolute; top: 0; left: 0; right: 0; height: 3px;
-  }
+  .tool-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
   .tool-card.teal::before { background: var(--teal); }
   .tool-card.gold::before { background: var(--gold); }
+  .tool-card.indigo::before { background: var(--navy); }
 
   .tool-eyebrow {
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.68rem;
+    font-size: 0.66rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
   }
   .tool-card.teal .tool-eyebrow { color: var(--teal-deep); }
   .tool-card.gold .tool-eyebrow { color: var(--gold-deep); }
+  .tool-card.indigo .tool-eyebrow { color: var(--navy); }
 
-  .tool-card h3 {
-    font-family: 'Fraunces', serif;
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--navy-deep);
-    margin-bottom: 4px;
-  }
-  .tool-card .tool-tag { font-size: 0.82rem; color: var(--muted); font-style: italic; margin-bottom: 16px; }
-  .tool-card p.desc { font-size: 0.9rem; color: var(--muted); flex-grow: 1; }
-
-  .tool-stats {
-    display: flex; gap: 18px; margin: 18px 0 22px;
-    padding-top: 16px; border-top: 1px solid var(--line);
-  }
-  .tool-stats div { font-size: 0.72rem; color: var(--muted); }
-  .tool-stats strong { display: block; font-family: 'IBM Plex Mono', monospace; font-size: 0.95rem; color: var(--navy); }
+  .tool-card h3 { font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 600; color: var(--navy-deep); margin-bottom: 4px; }
+  .tool-card .tool-tag { font-size: 0.8rem; color: var(--muted); font-style: italic; margin-bottom: 14px; }
+  .tool-card p.desc { font-size: 0.88rem; color: var(--muted); flex-grow: 1; }
 
   .tool-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    font-size: 0.88rem;
-    font-weight: 600;
-    padding: 12px 20px;
-    border-radius: 3px;
-    color: #fff;
-    width: fit-content;
+    display: inline-flex; align-items: center; gap: 8px; margin-top: 20px;
+    text-decoration: none; font-size: 0.86rem; font-weight: 600;
+    padding: 11px 18px; border-radius: 3px; color: #fff; width: fit-content;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
   .tool-card.teal .tool-btn { background: var(--teal); }
   .tool-card.gold .tool-btn { background: var(--gold); }
+  .tool-card.indigo .tool-btn { background: var(--navy); }
   .tool-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
   .tool-btn:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
-
-  /* -------- why section -------- */
-  .why {
-    margin-top: 60px;
-    background: var(--navy-deep);
-    color: #dfe9e7;
-    border-radius: 4px;
-    padding: 40px 6vw;
-    max-width: none;
-  }
-  .why-inner { max-width: 1120px; margin: 0 auto; }
-  .why h2 {
-    font-family: 'Fraunces', serif;
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #fff;
-    margin-bottom: 22px;
-  }
-  .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-  @media (max-width: 780px) { .why-grid { grid-template-columns: 1fr; } }
-  .why-col .label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.68rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-  .why-col.c-teal .label { color: #6ecbc2; }
-  .why-col.c-gold .label { color: #e0bd76; }
-  .why-col p { font-size: 0.92rem; color: #b9cbc8; }
-
-  /* -------- footer -------- */
-  footer {
-    margin-top: 70px;
-    border-top: 1px solid var(--line);
-    padding: 28px 6vw 40px;
-  }
-  .footer-inner {
-    max-width: 1180px; margin: 0 auto;
-    display: flex; flex-wrap: wrap; gap: 24px;
-    justify-content: space-between;
-    font-size: 0.76rem; color: var(--muted);
-  }
-  .footer-inner .fcol strong { display: block; color: var(--navy); font-size: 0.8rem; margin-bottom: 4px; }
-  .footer-note {
-    max-width: 1180px; margin: 20px auto 0;
-    font-size: 0.72rem; color: #93a2a5;
-    border-top: 1px dashed var(--line); padding-top: 16px;
-  }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="brand">
-    <span class="brand-code">MGTO BA01</span>
-    <span class="brand-name">Habilidades Directivas I</span>
+<nav class="site-sidebar">
+  <a href="index.html" class="active" title="Inicio">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+    <span>Inicio</span>
+  </a>
+  <a href="belbin_test.html" title="Test de Roles de Equipo (Belbin)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    <span>Roles</span>
+  </a>
+  <a href="liderazgo_test.html" title="Test de Estilos de Liderazgo (Goleman)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+    <span>Liderazgo</span>
+  </a>
+  <a href="https://www.16personalities.com/es" target="_blank" rel="noopener noreferrer" title="16Personalities (recurso externo)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+    <span>16P</span>
+  </a>
+</nav>
+
+<main>
+  <div class="eyebrow">MGTO BA01 · Habilidades Directivas I</div>
+  <h1>Instrumentos de autodiagnóstico</h1>
+
+  <div class="instructions">
+    <p>Completa los siguientes instrumentos para identificar el rol que aportas a un equipo de trabajo y el estilo con el que ejerces liderazgo. Ingresa tu nombre real en cada uno: tu resultado queda disponible en la vista de equipo del curso, visible para el resto de tus compañeros/as.</p>
+    <p>Puedes completarlos en el orden que prefieras. Responde con honestidad, pensando en tu comportamiento habitual y no en el que te gustaría tener.</p>
   </div>
-  <div class="program">Magíster en Dirección y Gestión Estratégica en Salud · USS</div>
-</header>
 
-<div class="hero">
-  <div>
-    <div class="eyebrow">Instrumentos de autodiagnóstico</div>
-    <h1>Antes de dirigir equipos<br>en salud, <em>conócete</em><br>como líder.</h1>
-    <p class="hero-sub">Dos instrumentos breves para identificar el rol que aportas a un equipo y el estilo con el que ejerces influencia como líder — la base para las Unidades 1 y 3 del módulo.</p>
-    <div class="hero-meta">
-      <div><strong>2</strong>instrumentos</div>
-      <div><strong>~25 min</strong>tiempo total</div>
-      <div><strong>Trimestre 2</strong>online</div>
-    </div>
-  </div>
-  <div class="network-wrap" id="networkWrap">
-    <svg viewBox="0 0 340 300" xmlns="http://www.w3.org/2000/svg">
-      <line class="edge" x1="170" y1="150" x2="80" y2="70" stroke="#1c7c74" stroke-width="1.4"/>
-      <line class="edge" x1="170" y1="150" x2="260" y2="70" stroke="#b8862b" stroke-width="1.4"/>
-      <line class="edge" x1="170" y1="150" x2="60" y2="180" stroke="#c9d3d4" stroke-width="1.2"/>
-      <line class="edge" x1="170" y1="150" x2="280" y2="190" stroke="#c9d3d4" stroke-width="1.2"/>
-      <line class="edge" x1="170" y1="150" x2="120" y2="250" stroke="#c9d3d4" stroke-width="1.2"/>
-      <line class="edge" x1="170" y1="150" x2="220" y2="250" stroke="#c9d3d4" stroke-width="1.2"/>
-      <line class="edge" x1="80" y1="70" x2="60" y2="180" stroke="#dbe2e3" stroke-width="1"/>
-      <line class="edge" x1="260" y1="70" x2="280" y2="190" stroke="#dbe2e3" stroke-width="1"/>
-
-      <circle class="node" cx="170" cy="150" r="15" fill="#123a4d"/>
-      <text x="170" y="154" text-anchor="middle" fill="#fff" font-size="9" font-family="IBM Plex Mono, monospace">TÚ</text>
-
-      <circle class="node" cx="80" cy="70" r="10" fill="#1c7c74"/>
-      <circle class="node" cx="260" cy="70" r="10" fill="#b8862b"/>
-      <circle class="node" cx="60" cy="180" r="6" fill="#c9d3d4"/>
-      <circle class="node" cx="280" cy="190" r="6" fill="#c9d3d4"/>
-      <circle class="node" cx="120" cy="250" r="6" fill="#c9d3d4"/>
-      <circle class="node" cx="220" cy="250" r="6" fill="#c9d3d4"/>
-
-      <text class="node" x="80" y="50" text-anchor="middle" fill="#145f59" font-size="10" font-family="IBM Plex Mono, monospace">ROL</text>
-      <text class="node" x="260" y="50" text-anchor="middle" fill="#93691f" font-size="10" font-family="IBM Plex Mono, monospace">ESTILO</text>
-    </svg>
-  </div>
-</div>
-
-<section class="tools">
-  <div class="section-head">
-    <h2>Elige un instrumento</h2>
-    <p>Puedes hacer ambos en cualquier orden. Cada uno toma entre 10 y 15 minutos y tu resultado queda disponible en la vista de equipo del curso.</p>
-  </div>
   <div class="tool-grid">
 
     <div class="tool-card teal">
-      <div class="tool-eyebrow">Diagnóstico de rol · Unidad 1</div>
+      <div class="tool-eyebrow">Diagnóstico de rol</div>
       <h3>Roles de Equipo</h3>
       <div class="tool-tag">Inventario de Belbin</div>
-      <p class="desc">Identifica qué aportas naturalmente a un equipo de trabajo: ¿coordinas, generas ideas, cierras tareas, sostienes al grupo? Reparte 10 puntos entre 8 afirmaciones en 7 secciones breves.</p>
-      <div class="tool-stats">
-        <div><strong>7</strong>secciones</div>
-        <div><strong>~15 min</strong>duración</div>
-        <div><strong>9</strong>roles posibles</div>
-      </div>
+      <p class="desc">Identifica qué aportas naturalmente a un equipo de trabajo: ¿coordinas, generas ideas, cierras tareas, sostienes al grupo?</p>
       <a class="tool-btn" href="belbin_test.html">Iniciar test de roles →</a>
     </div>
 
     <div class="tool-card gold">
-      <div class="tool-eyebrow">Diagnóstico de estilo · Unidad 3</div>
+      <div class="tool-eyebrow">Diagnóstico de estilo</div>
       <h3>Estilos de Liderazgo</h3>
       <div class="tool-tag">Modelo de Goleman</div>
-      <p class="desc">Identifica cómo ejerces influencia cuando lideras: ¿inspiras una visión, formas a tu equipo, buscas consenso o exiges resultados? 30 afirmaciones con escala de frecuencia.</p>
-      <div class="tool-stats">
-        <div><strong>30</strong>afirmaciones</div>
-        <div><strong>~10 min</strong>duración</div>
-        <div><strong>6</strong>estilos posibles</div>
-      </div>
+      <p class="desc">Identifica cómo ejerces influencia cuando lideras: ¿inspiras una visión, formas a tu equipo, buscas consenso o exiges resultados?</p>
       <a class="tool-btn" href="liderazgo_test.html">Iniciar test de liderazgo →</a>
     </div>
 
-  </div>
-</section>
+    <div class="tool-card indigo">
+      <div class="tool-eyebrow">Recurso externo</div>
+      <h3>Test de Personalidad</h3>
+      <div class="tool-tag">16Personalities (basado en MBTI)</div>
+      <p class="desc">Explora tu tipo de personalidad y cómo tiende a expresarse en tu forma de trabajar y relacionarte. No forma parte de la evaluación del curso.</p>
+      <a class="tool-btn" href="https://www.16personalities.com/es" target="_blank" rel="noopener noreferrer">Ir a 16Personalities ↗</a>
+    </div>
 
-<section>
-  <div class="why">
-    <div class="why-inner">
-      <h2>Por qué dos instrumentos y no uno</h2>
-      <div class="why-grid">
-        <div class="why-col c-teal">
-          <div class="label">Belbin — qué aportas</div>
-          <p>Describe tu contribución natural dentro de un equipo: la función que cumples cuando trabajas junto a otros, más allá de tu cargo formal. Es la base para formar equipos multidisciplinarios balanceados, como los que vas a dirigir en salud.</p>
-        </div>
-        <div class="why-col c-gold">
-          <div class="label">Goleman — cómo influyes</div>
-          <p>Describe tu forma de ejercer liderazgo: cómo tomas decisiones, das dirección y respondes bajo presión. Ningún estilo es superior en abstracto — los líderes más efectivos alternan entre varios según la situación que enfrentan.</p>
-        </div>
-      </div>
-    </div>
   </div>
-</section>
-
-<footer>
-  <div class="footer-inner">
-    <div class="fcol">
-      <strong>Módulo</strong>
-      Habilidades Directivas I · MGTO BA01<br>D.R. N°67/2025 · Modular
-    </div>
-    <div class="fcol">
-      <strong>Programa</strong>
-      Magíster en Dirección y Gestión Estratégica en Salud<br>Facultad de Economía, Negocios y Gobierno
-    </div>
-    <div class="fcol">
-      <strong>Créditos</strong>
-      3 SCT · 12 semanas · Modalidad online
-    </div>
-  </div>
-  <p class="footer-note">Tu nombre y resultados quedan visibles para el resto del curso en la vista de equipo de cada instrumento. Universidad San Sebastián.</p>
-</footer>
-
-<script>
-  const wrap = document.getElementById('networkWrap');
-  requestAnimationFrame(() => requestAnimationFrame(() => wrap.classList.add('revealed')));
-</script>
+</main>
 
 </body>
 </html>
