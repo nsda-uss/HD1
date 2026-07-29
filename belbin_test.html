@@ -487,14 +487,68 @@ function showResults() {
     `;
   });
 
+  // Guardar resultados para poder armar el correo más abajo
+  lastResults = { sorted, top3, bottom2 };
+
+  html += `
+    <div style="margin-top:26px;padding-top:22px;border-top:1px solid var(--line);">
+      <div style="font-weight:700;color:#2d3748;margin-bottom:8px;">📧 Recibir estos resultados por correo</div>
+      <p style="font-size:0.82rem;color:#718096;margin-bottom:12px;">Ingresa tu correo y se abrirá tu programa de correo con un mensaje ya redactado, listo para que lo envíes a ti mismo/a.</p>
+      <input type="email" id="resultEmail" placeholder="tu.correo@ejemplo.com" style="width:100%;padding:10px;border:1px solid var(--line);border-radius:3px;font-size:0.9rem;font-family:'Inter',sans-serif;margin-bottom:10px;">
+      <button class="btn" style="margin-top:0;" onclick="sendResultsByEmail()">Enviarme mis resultados →</button>
+      <div id="emailStatus" style="font-size:0.78rem;color:#b0413e;margin-top:8px;"></div>
+    </div>
+  `;
+
   html += `<button class="restart-btn" onclick="restartTest()">↩ Volver a hacer el test</button>`;
   res.innerHTML = html;
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+let lastResults = null;
+
+function sendResultsByEmail() {
+  const emailInput = document.getElementById('resultEmail');
+  const statusEl = document.getElementById('emailStatus');
+  const email = emailInput.value.trim();
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!emailRegex.test(email)) {
+    statusEl.textContent = '⚠️ Ingresa un correo válido.';
+    emailInput.style.borderColor = '#b0413e';
+    return;
+  }
+  emailInput.style.borderColor = 'var(--line)';
+  statusEl.style.color = '#5c6b70';
+  statusEl.textContent = 'Abriendo tu programa de correo...';
+
+  const { sorted, top3, bottom2 } = lastResults;
+
+  let body = 'RESULTADOS - TEST DE ROLES DE EQUIPO (BELBIN)\n';
+  body += 'Módulo MGTO BA01 · Habilidades Directivas I\n\n';
+  body += 'TUS 3 ROLES PRINCIPALES:\n';
+  top3.forEach(([code, score], idx) => {
+    const r = ROLES[code];
+    body += `${idx + 1}. ${r.name} (${score} pts) — ${r.desc}\n`;
+  });
+  body += '\nTUS ROLES MENOS NATURALES:\n';
+  bottom2.forEach(([code, score]) => {
+    body += `- ${ROLES[code].name} (${score} pts)\n`;
+  });
+  body += '\nPUNTAJE COMPLETO:\n';
+  sorted.forEach(([code, score]) => {
+    body += `${ROLES[code].name}: ${score} pts\n`;
+  });
+
+  const subject = 'Mis resultados - Test de Roles de Equipo (Belbin)';
+  const mailtoLink = `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  window.location.href = mailtoLink;
+}
+
 function restartTest() {
   currentSection = 0;
   scores = [];
+  lastResults = null;
   document.getElementById('resultsArea').style.display = 'none';
   document.getElementById('introCard').style.display = 'block';
   window.scrollTo({ top: 0, behavior: 'smooth' });
