@@ -55,8 +55,9 @@
     background: #edf2f7; color: #4a5568; border: none; border-radius: 10px;
     padding: 12px; font-size: 0.9rem; font-weight: 600; cursor: pointer;
   }
-  .progress-bar { height: 6px; background: #edf2f7; border-radius: 3px; margin-bottom: 22px; overflow: hidden; }
-  .progress-fill { height: 100%; background: linear-gradient(90deg, #4a2f6b, #1e3a5f); transition: width .3s; }
+  .progress-bar-wrap { background: #edf2f7; border-radius: 99px; height: 6px; margin-bottom: 8px; }
+  .progress-bar { background: #1c7c74; height: 6px; border-radius: 99px; transition: width 0.4s ease; }
+  .progress-label { font-family: monospace; font-size: 0.72rem; color: #718096; margin-bottom: 20px; text-align: right; }
   .statement-block { margin-bottom: 22px; }
   .statement-text { font-size: 0.94rem; color: #2d3748; margin-bottom: 10px; font-weight: 500; }
   .likert { display: flex; gap: 6px; }
@@ -127,7 +128,8 @@
 
   <!-- TEST -->
   <div class="card" id="testArea" style="display:none;">
-    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+    <div class="progress-label" id="progressLabel">Página 1 de 3</div>
     <div id="questionsContainer"></div>
     <button class="btn" id="nextBtn" onclick="nextPage()" disabled>Siguiente →</button>
   </div>
@@ -186,7 +188,7 @@ const STYLES = {
   }
 };
 
-const STATEMENTS = [
+const STATEMENTS_BASE = [
   { code:'VI', text:'Le doy a mi equipo una imagen clara de hacia dónde vamos y por qué importa.' },
   { code:'VI', text:'Inspiro a las personas a comprometerse con una meta a largo plazo, aunque el camino no esté totalmente definido.' },
   { code:'VI', text:'Dejo que cada persona decida cómo llegar a la meta, mientras entienda el objetivo final.' },
@@ -224,7 +226,19 @@ const STATEMENTS = [
   { code:'AU', text:'Cuando algo sale mal, mi primera reacción es corregir con firmeza y dejar claro que no se debe repetir.' }
 ];
 
-const PAGE_SIZE = 6;
+// Mezcla aleatoria (Fisher-Yates) para que las afirmaciones de un mismo estilo
+// no queden agrupadas y visibles en el mismo orden cada vez.
+function shuffleArray(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+const STATEMENTS = shuffleArray(STATEMENTS_BASE);
+
+const PAGE_SIZE = 10;
 const TOTAL_PAGES = Math.ceil(STATEMENTS.length / PAGE_SIZE);
 let currentPage = 0;
 let answers = new Array(STATEMENTS.length).fill(null);
@@ -261,7 +275,8 @@ function renderPage(pageIdx) {
     `;
   }
   container.innerHTML = html;
-  document.getElementById('progressFill').style.width = Math.round(((pageIdx) / TOTAL_PAGES) * 100) + '%';
+  document.getElementById('progressBar').style.width = Math.round(((pageIdx) / TOTAL_PAGES) * 100) + '%';
+  document.getElementById('progressLabel').textContent = `Página ${pageIdx + 1} de ${TOTAL_PAGES}`;
   updateNextBtn();
   const nextBtn = document.getElementById('nextBtn');
   nextBtn.textContent = (pageIdx === TOTAL_PAGES - 1) ? 'Ver mis resultados →' : 'Siguiente →';
