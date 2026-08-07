@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DISC · Estilos de Comportamiento — Habilidades Directivas I</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-deep:#0B1B33;
+    --navy:#132A4C;
+    --teal:#1F6F78;
+    --gold:#C9A227;
+    --paper:#F7F4EC;
+    --paper-2:#EFEADC;
+    --ink:#14202E;
+    --ink-soft:#4C5A6B;
+    --border:#DDD6C4;
+    --white:#FFFFFF;
+    --slate:#5B6472;
+    --danger:#A6402F;
+    --radius:3px;
+    --sidebar-w:64px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    color:var(--navy-deep);
+    margin:0 0 .5em 0;
+  }
+  .mono{
+    font-family:'IBM Plex Mono',monospace;
+    letter-spacing:.04em;
+  }
+  a{color:var(--teal);}
+
+  /* ---------- Sidebar ---------- */
+  .sidebar{
+    position:fixed;
+    top:0; left:0; bottom:0;
+    width:var(--sidebar-w);
+    background:var(--navy-deep);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:18px 0;
+    gap:22px;
+    z-index:50;
+  }
+  .sidebar .brand{
+    width:30px;height:30px;
+    border:1.5px solid var(--gold);
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--gold);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    margin-bottom:8px;
+  }
+  .sidebar nav{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    flex:1;
+  }
+  .sidebar a.icon{
+    width:38px;height:38px;
+    display:flex;align-items:center;justify-content:center;
+    border-radius:var(--radius);
+    color:#8CA0BC;
+    text-decoration:none;
+    transition:background .15s, color .15s;
+  }
+  .sidebar a.icon svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7;}
+  .sidebar a.icon:hover{background:rgba(255,255,255,.06);color:var(--white);}
+  .sidebar a.icon.active{background:var(--teal);color:var(--white);}
+  .sidebar .foot{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:9px;
+    color:#5A6E8C;
+    writing-mode:vertical-rl;
+    text-orientation:mixed;
+    letter-spacing:.1em;
+  }
+
+  /* ---------- Layout ---------- */
+  .app{
+    margin-left:var(--sidebar-w);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+  }
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:22px 40px;
+    border-bottom:1px solid var(--border);
+    background:var(--paper);
+    position:sticky; top:0; z-index:20;
+  }
+  .topbar .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--teal);
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    margin-bottom:2px;
+  }
+  .topbar h1{font-size:20px; margin:0;}
+  .progress-wrap{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+  }
+  .progress-track{
+    width:160px;height:6px;
+    background:var(--paper-2);
+    border:1px solid var(--border);
+    border-radius:99px;
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    background:var(--teal);
+    width:0%;
+    transition:width .3s ease;
+  }
+
+  main{
+    flex:1;
+    padding:40px;
+    max-width:900px;
+    width:100%;
+    margin:0 auto;
+  }
+
+  .card{
+    background:var(--white);
+    border:1px solid var(--border);
+    border-top:3px solid var(--teal);
+    border-radius:var(--radius);
+    padding:28px 30px;
+    margin-bottom:24px;
+  }
+  .card.gold{border-top-color:var(--gold);}
+  .card.navy{border-top-color:var(--navy-deep);}
+
+  p{line-height:1.65; color:var(--ink);}
+  .lead{font-size:16px; color:var(--ink-soft);}
+
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:14px;
+    padding:12px 22px;
+    border-radius:var(--radius);
+    border:1px solid var(--navy-deep);
+    background:var(--navy-deep);
+    color:var(--white);
+    cursor:pointer;
+    text-decoration:none;
+    transition:transform .1s ease, opacity .15s ease;
+  }
+  .btn:hover{opacity:.88;}
+  .btn:active{transform:translateY(1px);}
+  .btn.secondary{
+    background:transparent;
+    color:var(--navy-deep);
+  }
+  .btn.gold{background:var(--gold); border-color:var(--gold); color:var(--navy-deep);}
+  .btn:disabled{opacity:.4; cursor:not-allowed;}
+
+  .btn-row{display:flex; justify-content:space-between; align-items:center; margin-top:8px; gap:12px;}
+
+  label{
+    display:block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+  input[type=text], input[type=email]{
+    width:100%;
+    padding:11px 12px;
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    font-family:'Inter',sans-serif;
+    font-size:14px;
+    background:var(--paper);
+    color:var(--ink);
+    margin-bottom:18px;
+  }
+  input:focus, .word-btn:focus-visible, .btn:focus-visible{
+    outline:2px solid var(--teal);
+    outline-offset:2px;
+  }
+
+  /* ---------- Tetrad group ---------- */
+  .tetrad{
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:20px 22px 18px;
+    margin-bottom:16px;
+  }
+  .tetrad-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom:12px;
+  }
+  .tetrad-num{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--gold);
+    letter-spacing:.06em;
+  }
+  .tetrad-status{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    color:var(--ink-soft);
+  }
+  .tetrad-status.ok{color:var(--teal);}
+  .word-grid{
+    display:grid;
+    grid-template-columns:1fr auto auto;
+    row-gap:8px;
+    column-gap:14px;
+    align-items:center;
+  }
+  .word-label{
+    font-size:15px;
+    color:var(--ink);
+    padding:8px 2px;
+  }
+  .word-btn{
+    width:40px;height:34px;
+    border:1px solid var(--border);
+    background:var(--paper);
+    border-radius:var(--radius);
+    cursor:pointer;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    font-weight:600;
+    color:var(--ink-soft);
+    transition:all .12s ease;
+  }
+  .word-btn:hover{border-color:var(--teal);}
+  .word-btn.most.selected{background:var(--teal); border-color:var(--teal); color:var(--white);}
+  .word-btn.least.selected{background:var(--danger); border-color:var(--danger); color:var(--white);}
+  .word-btn:disabled{opacity:.3; cursor:not-allowed;}
+  .col-heads{
+    display:grid;
+    grid-template-columns:1fr auto auto;
+    column-gap:14px;
+    margin-bottom:6px;
+  }
+  .col-heads span{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:9.5px;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--ink-soft);
+    text-align:center;
+  }
+  .col-heads span:first-child{text-align:left;}
+
+  .instructions-box{
+    background:var(--paper-2);
+    border:1px dashed var(--border);
+    border-radius:var(--radius);
+    padding:14px 16px;
+    font-size:13px;
+    color:var(--ink-soft);
+    margin-bottom:22px;
+    line-height:1.55;
+  }
+
+  /* ---------- Results ---------- */
+  .bars{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    margin:22px 0 6px;
+  }
+  .bar-row{display:flex; align-items:center; gap:14px;}
+  .bar-label{
+    width:190px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:var(--ink);
+    text-align:right;
+    flex-shrink:0;
+  }
+  .bar-track{
+    flex:1;
+    height:20px;
+    background:var(--paper-2);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    overflow:hidden;
+    position:relative;
+  }
+  .bar-fill{
+    height:100%;
+    width:0%;
+    transition:width .8s cubic-bezier(.2,.8,.2,1);
+  }
+  .bar-score{
+    width:38px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+  }
+
+  .style-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:6px 14px;
+    border-radius:99px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    font-weight:600;
+    color:var(--white);
+    margin-right:8px;
+    margin-bottom:8px;
+  }
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--white);}
+
+  .dim-block{
+    border-left:3px solid var(--border);
+    padding-left:16px;
+    margin-bottom:22px;
+  }
+  .dim-block h3{font-size:16px; margin-bottom:4px; display:flex; align-items:center; gap:10px;}
+  .dim-block .letter{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13px;
+    width:24px;height:24px;
+    border-radius:50%;
+    display:inline-flex;align-items:center;justify-content:center;
+    color:var(--white);
+  }
+  .dim-block ul{margin:8px 0 0; padding-left:18px; color:var(--ink-soft); font-size:14px; line-height:1.6;}
+
+  .email-box{
+    background:var(--paper-2);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:22px 24px;
+    margin-top:12px;
+  }
+
+  footer.page-foot{
+    text-align:center;
+    padding:26px 40px 40px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+  }
+
+  .hidden{display:none !important;}
+
+  @media (max-width:640px){
+    .sidebar{width:52px;}
+    .app{margin-left:52px;}
+    main{padding:22px 16px;}
+    .topbar{padding:16px 18px; flex-direction:column; align-items:flex-start; gap:10px;}
+    .bar-label{width:120px; font-size:10.5px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="brand mono">HD</div>
+  <nav>
+    <a class="icon" href="index.html" title="Inicio" aria-label="Inicio">
+      <svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+    </a>
+    <a class="icon" href="belbin_test.html" title="Roles de Equipo (Belbin)" aria-label="Belbin">
+      <svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><path d="M3 20c0-3 2.5-5 5-5s5 2 5 5"/><path d="M11 20c0-3 2.5-5 5-5s5 2 5 5"/></svg>
+    </a>
+    <a class="icon" href="liderazgo_test.html" title="Estilos de Liderazgo (Goleman)" aria-label="Liderazgo">
+      <svg viewBox="0 0 24 24"><path d="M12 2l2.7 6.6L22 9l-5.4 4.8L18.4 22 12 17.8 5.6 22l1.8-8.2L2 9l7.3-.4z"/></svg>
+    </a>
+    <a class="icon active" href="disc_test.html" title="DISC" aria-label="DISC">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    </a>
+  </nav>
+  <div class="foot">MGTO BA01</div>
+</div>
+
+<div class="app">
+
+  <div class="topbar">
+    <div>
+      <div class="eyebrow">Instrumento de autodiagnóstico</div>
+      <h1>DISC · Estilos de Comportamiento</h1>
+    </div>
+    <div class="progress-wrap" id="progressWrap">
+      <span id="progressLabel">Paso 0 / 4</span>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+  </div>
+
+  <main>
+
+    <!-- ===================== PANTALLA 0: INTRO ===================== -->
+    <section id="screen-intro">
+      <div class="card">
+        <h2>Antes de comenzar</h2>
+        <p class="lead">El modelo DISC describe cuatro tendencias de comportamiento: <strong>Dominante (D)</strong>, <strong>Influyente (I)</strong>, <strong>Estable (S)</strong> y <strong>Concienzudo (C)</strong>. No mide inteligencia, valores ni capacidad técnica — describe cómo tiendes a actuar, decidir y relacionarte en el trabajo.</p>
+        <div class="instructions-box">
+          <strong>Formato del instrumento:</strong> encontrarás 24 grupos de 4 palabras. En cada grupo debes marcar la palabra que <strong>MÁS</strong> te representa y la palabra que <strong>MENOS</strong> te representa. Las otras dos quedan sin marcar. No hay respuestas correctas o incorrectas: responde según cómo actúas habitualmente, no según cómo crees que deberías actuar.
+        </div>
+        <label for="nameInput">Tu nombre</label>
+        <input type="text" id="nameInput" placeholder="Nombre y apellido">
+        <div class="btn-row">
+          <span class="mono" style="font-size:12px; color:var(--ink-soft);">24 grupos · ~10 minutos</span>
+          <button class="btn" id="startBtn">Comenzar →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== PANTALLAS 1-3: TETRADAS ===================== -->
+    <section id="screen-page" class="hidden">
+      <div class="card gold">
+        <h2 id="pageTitle">Bloque 1 de 3</h2>
+        <p class="lead" id="pageSub">Marca la palabra que MÁS y la que MENOS te representa en cada grupo.</p>
+      </div>
+      <div class="col-heads">
+        <span></span><span>Más</span><span>Menos</span>
+      </div>
+      <div id="tetradList"></div>
+      <div class="btn-row">
+        <button class="btn secondary" id="backBtn">← Atrás</button>
+        <button class="btn" id="nextBtn" disabled>Continuar →</button>
+      </div>
+    </section>
+
+    <!-- ===================== PANTALLA RESULTADOS ===================== -->
+    <section id="screen-results" class="hidden">
+      <div class="card navy">
+        <h2>Tu perfil DISC</h2>
+        <p class="lead" id="resultsIntro"></p>
+        <div id="stylePills"></div>
+        <div class="bars" id="barsWrap"></div>
+      </div>
+
+      <div class="card">
+        <h2>Lectura de tus dimensiones</h2>
+        <div id="dimBlocks"></div>
+      </div>
+
+      <div class="card email-box">
+        <h2>Recibe tus resultados por correo</h2>
+        <p>Escribe tu correo y se abrirá tu programa de correo con un resumen de tu perfil, listo para enviar a tu propia casilla.</p>
+        <label for="emailInput">Tu correo electrónico</label>
+        <input type="email" id="emailInput" placeholder="tucorreo@dominio.cl">
+        <div class="btn-row" style="justify-content:flex-start;">
+          <a class="btn gold" id="mailtoBtn" href="#">✉ Enviarme mis resultados</a>
+          <button class="btn secondary" id="restartBtn">Repetir instrumento</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="page-foot">Habilidades Directivas I · MGTO BA01 · Magíster en Dirección y Gestión Estratégica en Salud, USS</footer>
+</div>
+
+<script>
+/* =========================================================
+   BANCO DE PALABRAS — 24 tétradas, una palabra por dimensión
+   ========================================================= */
+const WORDS = {
+  D: ["Decidido","Directo","Competitivo","Audaz","Firme","Exigente","Independiente","Enérgico","Contundente","Impulsor","Resolutivo","Arriesgado","Dominante","Impaciente","Autoritario","Determinado","Franco","Persistente","Combativo","Ambicioso","Vigoroso","Desafiante","Autosuficiente","Pionero"],
+  I: ["Entusiasta","Sociable","Persuasivo","Optimista","Expresivo","Carismático","Comunicativo","Espontáneo","Amigable","Inspirador","Extrovertido","Convincente","Animado","Cordial","Encantador","Motivador","Locuaz","Emotivo","Divertido","Cálido","Elocuente","Efusivo","Jovial","Vivaz"],
+  S: ["Paciente","Estable","Leal","Constante","Calmado","Predecible","Cooperador","Confiable","Tranquilo","Metódico","Conciliador","Perseverante","Sereno","Amable","Consistente","Discreto","Comprensivo","Tolerante","Apacible","Servicial","Ecuánime","Solidario","Contenido","Pausado"],
+  C: ["Meticuloso","Analítico","Preciso","Cauteloso","Sistemático","Riguroso","Ordenado","Detallista","Reflexivo","Objetivo","Formal","Exacto","Escrupuloso","Lógico","Cuidadoso","Disciplinado","Perfeccionista","Puntual","Crítico","Correcto","Estructurado","Diligente","Prudente","Concienzudo"]
+};
+
+const DIM_META = {
+  D: { name:"Dominante", color:"#0B1B33", short:"Orientación a resultados y control" },
+  I: { name:"Influyente", color:"#C9A227", short:"Orientación a las personas y persuasión" },
+  S: { name:"Estable", color:"#1F6F78", short:"Orientación a la cooperación y consistencia" },
+  C: { name:"Concienzudo", color:"#5B6472", short:"Orientación a la precisión y las normas" }
+};
+
+const DIM_DETAIL = {
+  D: {
+    desc:"Las personas con un perfil Dominante tienden a asumir el mando, tomar decisiones con rapidez y orientarse a superar obstáculos para alcanzar metas. En contextos de salud, suelen liderar procesos de cambio o situaciones de crisis con determinación.",
+    fortalezas:["Capacidad de decisión bajo presión","Orientación clara a resultados","Iniciativa frente a problemas complejos"],
+    cuidado:["Puede pasar a llevar el consenso del equipo","Riesgo de impaciencia frente a procesos largos o normativos"]
+  },
+  I: {
+    desc:"Las personas con un perfil Influyente se orientan a las relaciones, comunican con entusiasmo y suelen motivar a otros hacia una visión compartida. En equipos multidisciplinarios, facilitan la cohesión y el clima de colaboración.",
+    fortalezas:["Comunicación persuasiva y cercana","Capacidad de generar entusiasmo en el equipo","Facilidad para construir redes de confianza"],
+    cuidado:["Puede priorizar el ambiente por sobre el detalle técnico","Riesgo de sobreestimar acuerdos verbales no formalizados"]
+  },
+  S: {
+    desc:"Las personas con un perfil Estable valoran la cooperación, la consistencia y los procesos predecibles. Son un ancla en equipos de salud sometidos a alta presión, sosteniendo rutinas y acuerdos en el tiempo.",
+    fortalezas:["Confiabilidad y consistencia en la ejecución","Capacidad de mediar y sostener la cohesión del equipo","Paciencia frente al cambio gradual"],
+    cuidado:["Puede resistirse a cambios rápidos o disruptivos","Riesgo de evitar el conflicto necesario para resolver un problema"]
+  },
+  C: {
+    desc:"Las personas con un perfil Concienzudo se orientan al análisis riguroso, la precisión y el respeto de normas y protocolos. En salud, son clave para sostener estándares de calidad y seguridad clínica.",
+    fortalezas:["Rigurosidad y atención al detalle","Apego a protocolos y estándares de calidad","Análisis objetivo antes de decidir"],
+    cuidado:["Puede ralentizar decisiones que requieren rapidez","Riesgo de excesiva crítica ante la ambigüedad o el error ajeno"]
+  }
+};
+
+/* Construir 24 tétradas: cada una toma la palabra i de cada dimensión */
+const TETRADS = [];
+for (let i = 0; i < 24; i++){
+  TETRADS.push([
+    { dim:"D", word:WORDS.D[i] },
+    { dim:"I", word:WORDS.I[i] },
+    { dim:"S", word:WORDS.S[i] },
+    { dim:"C", word:WORDS.C[i] }
+  ]);
+}
+
+/* Fisher–Yates shuffle — evita sesgo de posición por dimensión */
+function shuffle(arr){
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+const SHUFFLED_TETRADS = TETRADS.map(t => shuffle(t));
+
+/* Paginación: 3 bloques de 8 tétradas */
+const PAGES = [
+  SHUFFLED_TETRADS.slice(0, 8),
+  SHUFFLED_TETRADS.slice(8, 16),
+  SHUFFLED_TETRADS.slice(16, 24)
+];
+
+/* answers[globalIndex] = { most:'D'|'I'|'S'|'C', least:'D'|'I'|'S'|'C' } */
+const answers = {};
+
+let currentPage = -1; // -1 = intro
+const TOTAL_STEPS = PAGES.length + 1; // páginas + resultados
+
+const screenIntro = document.getElementById('screen-intro');
+const screenPage = document.getElementById('screen-page');
+const screenResults = document.getElementById('screen-results');
+const tetradList = document.getElementById('tetradList');
+const pageTitle = document.getElementById('pageTitle');
+const nextBtn = document.getElementById('nextBtn');
+const backBtn = document.getElementById('backBtn');
+const progressFill = document.getElementById('progressFill');
+const progressLabel = document.getElementById('progressLabel');
+
+document.getElementById('startBtn').addEventListener('click', () => {
+  const name = document.getElementById('nameInput').value.trim();
+  if (!name){
+    document.getElementById('nameInput').focus();
+    return;
+  }
+  currentPage = 0;
+  renderPage();
+});
+
+backBtn.addEventListener('click', () => {
+  if (currentPage === 0){
+    currentPage = -1;
+    screenPage.classList.add('hidden');
+    screenIntro.classList.remove('hidden');
+    updateProgress();
+  } else {
+    currentPage--;
+    renderPage();
+  }
+});
+
+nextBtn.addEventListener('click', () => {
+  if (currentPage < PAGES.length - 1){
+    currentPage++;
+    renderPage();
+  } else {
+    showResults();
+  }
+});
+
+function renderPage(){
+  screenIntro.classList.add('hidden');
+  screenResults.classList.add('hidden');
+  screenPage.classList.remove('hidden');
+
+  const pageWords = PAGES[currentPage];
+  const offset = currentPage * 8;
+  pageTitle.textContent = `Bloque ${currentPage + 1} de ${PAGES.length}`;
+
+  tetradList.innerHTML = '';
+  pageWords.forEach((tetrad, localIdx) => {
+    const globalIdx = offset + localIdx;
+    const wrap = document.createElement('div');
+    wrap.className = 'tetrad';
+
+    const head = document.createElement('div');
+    head.className = 'tetrad-head';
+    head.innerHTML = `<span class="tetrad-num mono">GRUPO ${globalIdx + 1} / 24</span><span class="tetrad-status mono" id="status-${globalIdx}">pendiente</span>`;
+    wrap.appendChild(head);
+
+    const grid = document.createElement('div');
+    grid.className = 'word-grid';
+
+    tetrad.forEach((item) => {
+      const label = document.createElement('div');
+      label.className = 'word-label';
+      label.textContent = item.word;
+      grid.appendChild(label);
+
+      const mostBtn = document.createElement('button');
+      mostBtn.type = 'button';
+      mostBtn.className = 'word-btn most';
+      mostBtn.textContent = '+';
+      mostBtn.setAttribute('aria-label', `${item.word} — más como yo`);
+      mostBtn.addEventListener('click', () => selectAnswer(globalIdx, item.dim, 'most'));
+      grid.appendChild(mostBtn);
+
+      const leastBtn = document.createElement('button');
+      leastBtn.type = 'button';
+      leastBtn.className = 'word-btn least';
+      leastBtn.textContent = '−';
+      leastBtn.setAttribute('aria-label', `${item.word} — menos como yo`);
+      leastBtn.addEventListener('click', () => selectAnswer(globalIdx, item.dim, 'least'));
+      grid.appendChild(leastBtn);
+    });
+
+    wrap.appendChild(grid);
+    tetradList.appendChild(wrap);
+  });
+
+  refreshButtonStates();
+  updateProgress();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function selectAnswer(globalIdx, dim, type){
+  if (!answers[globalIdx]) answers[globalIdx] = {};
+  const other = type === 'most' ? 'least' : 'most';
+  // no permitir marcar la misma palabra como más y menos a la vez
+  if (answers[globalIdx][other] === dim){
+    return;
+  }
+  answers[globalIdx][type] = dim;
+  refreshButtonStates();
+}
+
+function refreshButtonStates(){
+  const offset = currentPage * 8;
+  const pageWords = PAGES[currentPage];
+  const tetradEls = tetradList.querySelectorAll('.tetrad');
+
+  pageWords.forEach((tetrad, localIdx) => {
+    const globalIdx = offset + localIdx;
+    const a = answers[globalIdx] || {};
+    const tetradEl = tetradEls[localIdx];
+    const buttons = tetradEl.querySelectorAll('.word-btn');
+    tetrad.forEach((item, i) => {
+      const mostBtn = buttons[i * 2];
+      const leastBtn = buttons[i * 2 + 1];
+      mostBtn.classList.toggle('selected', a.most === item.dim);
+      leastBtn.classList.toggle('selected', a.least === item.dim);
+    });
+    const statusEl = document.getElementById(`status-${globalIdx}`);
+    const complete = a.most && a.least;
+    statusEl.textContent = complete ? 'completo ✓' : 'pendiente';
+    statusEl.classList.toggle('ok', !!complete);
+  });
+
+  const allComplete = pageWords.every((_, localIdx) => {
+    const globalIdx = offset + localIdx;
+    const a = answers[globalIdx] || {};
+    return a.most && a.least;
+  });
+  nextBtn.disabled = !allComplete;
+  nextBtn.textContent = currentPage === PAGES.length - 1 ? 'Ver mis resultados →' : 'Continuar →';
+}
+
+function updateProgress(){
+  let step = currentPage < 0 ? 0 : currentPage + 1;
+  if (!screenResults.classList.contains('hidden')) step = TOTAL_STEPS;
+  progressLabel.textContent = `Paso ${step} / ${TOTAL_STEPS}`;
+  progressFill.style.width = `${(step / TOTAL_STEPS) * 100}%`;
+}
+
+/* =========================================================
+   RESULTADOS
+   ========================================================= */
+function computeScores(){
+  const scores = { D:0, I:0, S:0, C:0 };
+  Object.values(answers).forEach(a => {
+    if (a.most) scores[a.most]++;
+    if (a.least) scores[a.least]--;
+  });
+  return scores;
+}
+
+function showResults(){
+  screenPage.classList.add('hidden');
+  screenResults.classList.remove('hidden');
+
+  const scores = computeScores();
+  const order = ['D','I','S','C'].sort((a,b) => scores[b] - scores[a]);
+  const primary = order[0];
+  const secondary = order[1];
+
+  document.getElementById('resultsIntro').textContent =
+    `Tu estilo de comportamiento predominante es ${DIM_META[primary].name}, con ${DIM_META[secondary].name} como estilo secundario. A continuación se muestra tu perfil en las cuatro dimensiones.`;
+
+  const pillsWrap = document.getElementById('stylePills');
+  pillsWrap.innerHTML = '';
+  [primary, secondary].forEach((dim, i) => {
+    const pill = document.createElement('span');
+    pill.className = 'style-pill';
+    pill.style.background = DIM_META[dim].color;
+    pill.innerHTML = `<span class="dot"></span>${i === 0 ? 'Primario' : 'Secundario'}: ${DIM_META[dim].name}`;
+    pillsWrap.appendChild(pill);
+  });
+
+  const maxAbs = Math.max(24, ...Object.values(scores).map(v => Math.abs(v)));
+  const barsWrap = document.getElementById('barsWrap');
+  barsWrap.innerHTML = '';
+  ['D','I','S','C'].forEach(dim => {
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    const pct = Math.max(0, ((scores[dim] + maxAbs) / (maxAbs * 2)) * 100);
+    row.innerHTML = `
+      <div class="bar-label">${DIM_META[dim].name} (${dim})</div>
+      <div class="bar-track"><div class="bar-fill" style="background:${DIM_META[dim].color}; width:${pct}%;"></div></div>
+      <div class="bar-score mono">${scores[dim] > 0 ? '+' : ''}${scores[dim]}</div>
+    `;
+    barsWrap.appendChild(row);
+  });
+
+  const dimBlocks = document.getElementById('dimBlocks');
+  dimBlocks.innerHTML = '';
+  order.forEach(dim => {
+    const detail = DIM_DETAIL[dim];
+    const block = document.createElement('div');
+    block.className = 'dim-block';
+    block.style.borderLeftColor = DIM_META[dim].color;
+    block.innerHTML = `
+      <h3><span class="letter" style="background:${DIM_META[dim].color}">${dim}</span>${DIM_META[dim].name} — puntaje ${scores[dim] > 0 ? '+' : ''}${scores[dim]}</h3>
+      <p>${detail.desc}</p>
+      <ul>
+        ${detail.fortalezas.map(f => `<li>${f}</li>`).join('')}
+        ${detail.cuidado.map(c => `<li><em>A cuidar:</em> ${c}</li>`).join('')}
+      </ul>
+    `;
+    dimBlocks.appendChild(block);
+  });
+
+  lastScores = scores;
+  lastPrimary = primary;
+  lastSecondary = secondary;
+  buildMailto();
+
+  const emailField = document.getElementById('emailInput');
+  emailField.removeEventListener('input', buildMailto);
+  emailField.addEventListener('input', buildMailto);
+
+  updateProgress();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+let lastScores = null, lastPrimary = null, lastSecondary = null;
+
+function buildMailto(){
+  if (!lastScores) return;
+  const name = document.getElementById('nameInput').value.trim() || 'Estudiante';
+  const email = document.getElementById('emailInput').value.trim();
+  const scores = lastScores;
+  const primary = lastPrimary;
+  const secondary = lastSecondary;
+
+  const subject = `Resultados DISC — ${name}`;
+  const bodyLines = [
+    `Resultados de autoevaluación DISC`,
+    `Módulo: Habilidades Directivas I (MGTO BA01)`,
+    ``,
+    `Nombre: ${name}`,
+    `Estilo primario: ${DIM_META[primary].name} (${primary})`,
+    `Estilo secundario: ${DIM_META[secondary].name} (${secondary})`,
+    ``,
+    `Puntajes por dimensión:`,
+    `- Dominante (D): ${scores.D > 0 ? '+' : ''}${scores.D}`,
+    `- Influyente (I): ${scores.I > 0 ? '+' : ''}${scores.I}`,
+    `- Estable (S): ${scores.S > 0 ? '+' : ''}${scores.S}`,
+    `- Concienzudo (C): ${scores.C > 0 ? '+' : ''}${scores.C}`,
+    ``,
+    DIM_DETAIL[primary].desc
+  ];
+  const body = bodyLines.join('\n');
+
+  const mailtoBtn = document.getElementById('mailtoBtn');
+  mailtoBtn.href = `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+document.getElementById('restartBtn').addEventListener('click', () => {
+  Object.keys(answers).forEach(k => delete answers[k]);
+  currentPage = -1;
+  screenResults.classList.add('hidden');
+  screenIntro.classList.remove('hidden');
+  updateProgress();
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+</script>
+
+</body>
+</html>

@@ -18,6 +18,8 @@
     --teal-deep: #145f59;
     --gold: #b8862b;
     --gold-deep: #93691f;
+    --slate: #5c6670;
+    --slate-deep: #3f4750;
     --line: #d7dfe1;
     --muted: #5c6b70;
   }
@@ -56,7 +58,7 @@
 
   /* -------- main -------- */
   main {
-    max-width: 880px;
+    max-width: 1080px;
     margin: 0 auto;
     padding: 64px 6vw 80px;
   }
@@ -92,10 +94,9 @@
   .tool-grid {
     margin-top: 44px;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
     gap: 22px;
   }
-  @media (max-width: 980px) { .tool-grid { grid-template-columns: 1fr 1fr; } }
   @media (max-width: 620px) { .tool-grid { grid-template-columns: 1fr; } }
 
   .tool-card {
@@ -112,6 +113,7 @@
   .tool-card.teal::before { background: var(--teal); }
   .tool-card.gold::before { background: var(--gold); }
   .tool-card.indigo::before { background: var(--navy); }
+  .tool-card.slate::before { background: var(--slate); }
 
   .tool-eyebrow {
     font-family: 'IBM Plex Mono', monospace;
@@ -123,6 +125,7 @@
   .tool-card.teal .tool-eyebrow { color: var(--teal-deep); }
   .tool-card.gold .tool-eyebrow { color: var(--gold-deep); }
   .tool-card.indigo .tool-eyebrow { color: var(--navy); }
+  .tool-card.slate .tool-eyebrow { color: var(--slate-deep); }
 
   .tool-card h3 { font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 600; color: var(--navy-deep); margin-bottom: 4px; }
   .tool-card .tool-tag { font-size: 0.8rem; color: var(--muted); font-style: italic; margin-bottom: 14px; }
@@ -137,6 +140,7 @@
   .tool-card.teal .tool-btn { background: var(--teal); }
   .tool-card.gold .tool-btn { background: var(--gold); }
   .tool-card.indigo .tool-btn { background: var(--navy); }
+  .tool-card.slate .tool-btn { background: var(--slate-deep); }
   .tool-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
   .tool-btn:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
 </style>
@@ -155,6 +159,10 @@
   <a href="liderazgo_test.html" title="Test de Estilos de Liderazgo (Goleman)">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
     <span>Liderazgo</span>
+  </a>
+  <a href="disc_test.html" title="Test DISC de Comportamiento">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    <span>DISC</span>
   </a>
   <a href="https://www.16personalities.com/es" target="_blank" rel="noopener noreferrer" title="16Personalities (recurso externo)">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
@@ -187,6 +195,14 @@
       <div class="tool-tag">Modelo de Goleman</div>
       <p class="desc">Identifica cómo ejerces influencia cuando lideras: ¿inspiras una visión, formas a tu equipo, buscas consenso o exiges resultados?</p>
       <a class="tool-btn" href="liderazgo_test.html">Iniciar test de liderazgo →</a>
+    </div>
+
+    <div class="tool-card slate">
+      <div class="tool-eyebrow">Diagnóstico de comportamiento</div>
+      <h3>DISC</h3>
+      <div class="tool-tag">Dominante · Influyente · Estable · Concienzudo</div>
+      <p class="desc">Identifica tu tendencia de comportamiento en el trabajo: ¿decides con rapidez, motivas al equipo, sostienes la calma o cuidas el detalle?</p>
+      <a class="tool-btn" href="disc_test.html">Iniciar test DISC →</a>
     </div>
 
     <div class="tool-card indigo">
