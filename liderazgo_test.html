@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Test de Estilos de Liderazgo (Goleman)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin:0; padding:0; }
   body {
@@ -18,11 +21,13 @@
     background: #0c2733;
     display: flex; flex-direction: column; align-items: center;
     padding-top: 22px; gap: 4px; z-index: 100;
+    border-right: 1px solid rgba(255,255,255,0.06);
   }
   .site-sidebar a {
     display: flex; flex-direction: column; align-items: center; gap: 6px;
     text-decoration: none; color: #cfe0dd; padding: 10px 4px; border-radius: 6px;
-    font-family: monospace; font-size: 0.6rem; letter-spacing: 0.04em;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; letter-spacing: 0.04em;
+    transition: background 0.15s ease, color 0.15s ease;
   }
   .site-sidebar a:hover, .site-sidebar a.active { background: rgba(255,255,255,0.08); color: #fff; }
   .site-sidebar svg { width: 18px; height: 18px; }
@@ -105,6 +110,10 @@
   <a href="liderazgo_test.html" class="active" title="Test de Estilos de Liderazgo (Goleman)">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
     <span>Liderazgo</span>
+  </a>
+  <a href="disc_test.html" title="Test DISC de Comportamiento">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    <span>DISC</span>
   </a>
   <a href="https://www.16personalities.com/es" target="_blank" rel="noopener noreferrer" title="16Personalities (recurso externo)">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>

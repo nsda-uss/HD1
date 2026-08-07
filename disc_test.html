@@ -44,53 +44,25 @@
   }
   a{color:var(--teal);}
 
-  /* ---------- Sidebar ---------- */
-  .sidebar{
-    position:fixed;
-    top:0; left:0; bottom:0;
-    width:var(--sidebar-w);
-    background:var(--navy-deep);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    padding:18px 0;
-    gap:22px;
-    z-index:50;
+  /* ---------- Sidebar (idéntica a index.html) ---------- */
+  .site-sidebar {
+    position: fixed; top: 0; left: 0; bottom: 0; width: 64px;
+    background: #0c2733;
+    display: flex; flex-direction: column; align-items: center;
+    padding-top: 22px; gap: 4px; z-index: 100;
+    border-right: 1px solid rgba(255,255,255,0.06);
   }
-  .sidebar .brand{
-    width:30px;height:30px;
-    border:1.5px solid var(--gold);
-    border-radius:50%;
-    display:flex;align-items:center;justify-content:center;
-    color:var(--gold);
-    font-family:'IBM Plex Mono',monospace;
-    font-size:11px;
-    margin-bottom:8px;
+  .site-sidebar a {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    text-decoration: none; color: #cfe0dd; padding: 10px 4px; border-radius: 6px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; letter-spacing: 0.04em;
+    transition: background 0.15s ease, color 0.15s ease;
   }
-  .sidebar nav{
-    display:flex;
-    flex-direction:column;
-    gap:6px;
-    flex:1;
-  }
-  .sidebar a.icon{
-    width:38px;height:38px;
-    display:flex;align-items:center;justify-content:center;
-    border-radius:var(--radius);
-    color:#8CA0BC;
-    text-decoration:none;
-    transition:background .15s, color .15s;
-  }
-  .sidebar a.icon svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7;}
-  .sidebar a.icon:hover{background:rgba(255,255,255,.06);color:var(--white);}
-  .sidebar a.icon.active{background:var(--teal);color:var(--white);}
-  .sidebar .foot{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:9px;
-    color:#5A6E8C;
-    writing-mode:vertical-rl;
-    text-orientation:mixed;
-    letter-spacing:.1em;
+  .site-sidebar a:hover, .site-sidebar a.active { background: rgba(255,255,255,0.08); color: #fff; }
+  .site-sidebar svg { display:block; width: 18px; height: 18px; }
+  @media (max-width: 600px) {
+    .site-sidebar { width: 48px; }
+    .site-sidebar a span { display: none; }
   }
 
   /* ---------- Layout ---------- */
@@ -382,8 +354,7 @@
   .hidden{display:none !important;}
 
   @media (max-width:640px){
-    .sidebar{width:52px;}
-    .app{margin-left:52px;}
+    .app{margin-left:48px;}
     main{padding:22px 16px;}
     .topbar{padding:16px 18px; flex-direction:column; align-items:flex-start; gap:10px;}
     .bar-label{width:120px; font-size:10.5px;}
@@ -392,24 +363,28 @@
 </head>
 <body>
 
-<div class="sidebar">
-  <div class="brand mono">HD</div>
-  <nav>
-    <a class="icon" href="index.html" title="Inicio" aria-label="Inicio">
-      <svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
-    </a>
-    <a class="icon" href="belbin_test.html" title="Roles de Equipo (Belbin)" aria-label="Belbin">
-      <svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><path d="M3 20c0-3 2.5-5 5-5s5 2 5 5"/><path d="M11 20c0-3 2.5-5 5-5s5 2 5 5"/></svg>
-    </a>
-    <a class="icon" href="liderazgo_test.html" title="Estilos de Liderazgo (Goleman)" aria-label="Liderazgo">
-      <svg viewBox="0 0 24 24"><path d="M12 2l2.7 6.6L22 9l-5.4 4.8L18.4 22 12 17.8 5.6 22l1.8-8.2L2 9l7.3-.4z"/></svg>
-    </a>
-    <a class="icon active" href="disc_test.html" title="DISC" aria-label="DISC">
-      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-    </a>
-  </nav>
-  <div class="foot">MGTO BA01</div>
-</div>
+<nav class="site-sidebar">
+  <a href="index.html" title="Inicio">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+    <span>Inicio</span>
+  </a>
+  <a href="belbin_test.html" title="Test de Roles de Equipo (Belbin)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    <span>Roles</span>
+  </a>
+  <a href="liderazgo_test.html" title="Test de Estilos de Liderazgo (Goleman)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+    <span>Liderazgo</span>
+  </a>
+  <a href="disc_test.html" class="active" title="Test DISC de Comportamiento">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    <span>DISC</span>
+  </a>
+  <a href="https://www.16personalities.com/es" target="_blank" rel="noopener noreferrer" title="16Personalities (recurso externo)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+    <span>16P</span>
+  </a>
+</nav>
 
 <div class="app">
 
