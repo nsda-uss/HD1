@@ -24,25 +24,8 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Inter', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; padding-left: 64px; line-height: 1.5; }
 
-  .site-sidebar {
-    position: fixed; top: 0; left: 0; bottom: 0; width: 64px;
-    background: var(--navy-deep);
-    display: flex; flex-direction: column; align-items: center;
-    padding-top: 22px; gap: 4px; z-index: 100;
-    border-right: 1px solid rgba(255,255,255,0.06);
-  }
-  .site-sidebar a {
-    display: flex; flex-direction: column; align-items: center; gap: 6px;
-    text-decoration: none; color: #cfe0dd; padding: 10px 4px; border-radius: 6px;
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; letter-spacing: 0.04em;
-    transition: background 0.15s ease, color 0.15s ease;
-  }
-  .site-sidebar a:hover, .site-sidebar a.active { background: rgba(255,255,255,0.08); color: #fff; }
-  .site-sidebar svg { width: 18px; height: 18px; }
   @media (max-width: 600px) {
     body { padding-left: 48px; }
-    .site-sidebar { width: 48px; }
-    .site-sidebar a span { display: none; }
   }
 
   .page-head { max-width: 760px; margin: 0 auto; padding: 56px 6vw 8px; }
@@ -141,28 +124,6 @@
 </style>
 </head>
 <body>
-<nav class="site-sidebar">
-  <a href="index.html" title="Inicio">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
-    <span>Inicio</span>
-  </a>
-  <a href="belbin_test.html" class="active" title="Test de Roles de Equipo (Belbin)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-    <span>Roles</span>
-  </a>
-  <a href="liderazgo_test.html" title="Test de Estilos de Liderazgo (Goleman)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
-    <span>Liderazgo</span>
-  </a>
-  <a href="disc_test.html" title="Test DISC de Comportamiento">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-    <span>DISC</span>
-  </a>
-  <a href="https://www.16personalities.com/es" target="_blank" rel="noopener noreferrer" title="16Personalities (recurso externo)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-    <span>16P</span>
-  </a>
-</nav>
 
 
 <div class="page-head">
@@ -558,5 +519,6 @@ function restartTest() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 </script>
+<script src="sidebar.js"></script>
 </body>
 </html>
