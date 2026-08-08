@@ -3,109 +3,180 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Test de Estilos de Liderazgo (Goleman)</title>
+<title>Estilos de Liderazgo · Test de Goleman</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin:0; padding:0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: linear-gradient(135deg, #1e3a5f 0%, #4a2f6b 100%);
-    min-height: 100vh;
-    padding: 24px 12px 24px 76px;
-    color: #1a202c;
+  :root {
+    --ink: #101b22;
+    --navy: #123a4d;
+    --navy-deep: #0c2733;
+    --paper: #f4f6f5;
+    --paper-raised: #ffffff;
+    --teal: #1c7c74;
+    --teal-deep: #145f59;
+    --gold: #b8862b;
+    --gold-deep: #93691f;
+    --line: #d7dfe1;
+    --muted: #5c6b70;
   }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; padding-left: 64px; line-height: 1.5; }
+
   @media (max-width: 600px) {
-    body { padding-left: 60px; }
+    body { padding-left: 48px; }
   }
-  .container { max-width: 680px; margin: 0 auto; }
-  .card {
-    background: #fff;
-    border-radius: 18px;
-    padding: 28px 24px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+
+  .page-head { max-width: 760px; margin: 0 auto; padding: 56px 6vw 8px; }
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--teal-deep); margin-bottom: 12px;
+    display: flex; align-items: center; gap: 10px;
   }
-  h1 { font-size: 1.5rem; color: #2d3748; margin-bottom: 6px; }
-  .subtitle { color: #718096; font-size: 0.9rem; margin-bottom: 18px; }
-  p { line-height: 1.5; color: #4a5568; font-size: 0.92rem; }
-  .btn {
-    display: block; width: 100%; margin-top: 20px;
-    background: linear-gradient(135deg, #4a2f6b, #1e3a5f);
-    color: #fff; border: none; border-radius: 10px;
-    padding: 14px; font-size: 1rem; font-weight: 600;
-    cursor: pointer; transition: opacity .2s;
+  .eyebrow::before { content: ''; width: 22px; height: 1px; background: var(--teal-deep); display: inline-block; }
+  .page-head h1 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: clamp(1.7rem, 3.6vw, 2.2rem); color: var(--navy-deep); letter-spacing: -0.01em;
   }
-  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
-  .btn:hover:not(:disabled) { opacity: 0.9; }
-  .restart-btn {
-    display: block; width: 100%; margin-top: 12px;
-    background: #edf2f7; color: #4a5568; border: none; border-radius: 10px;
-    padding: 12px; font-size: 0.9rem; font-weight: 600; cursor: pointer;
+  .page-head .lede { margin-top: 10px; font-size: 0.92rem; color: var(--muted); max-width: 58ch; }
+
+  .container { max-width: 760px; margin: 0 auto; padding: 24px 6vw 80px; }
+
+  .progress-bar-wrap { background: var(--line); border-radius: 99px; height: 6px; margin-bottom: 8px; }
+  .progress-bar { background: var(--teal); height: 6px; border-radius: 99px; transition: width 0.4s ease; }
+  .progress-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: var(--muted); margin-bottom: 20px; text-align: right; }
+
+  .intro-card { background: var(--paper-raised); border: 1px solid var(--line); border-top: 3px solid var(--teal); border-radius: 4px; padding: 28px 26px; margin-bottom: 24px; }
+  .intro-card h2 { font-family: 'Fraunces', serif; font-weight: 600; color: var(--navy-deep); margin-bottom: 12px; font-size: 1.2rem; }
+  .intro-card p { font-size: 0.88rem; line-height: 1.6; color: var(--muted); margin-bottom: 10px; }
+  .intro-card p strong { color: var(--ink); }
+
+  .styles-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 14px 0; }
+  .style-chip { background: var(--paper); border: 1px solid var(--line); border-radius: 3px; padding: 8px 10px; font-size: 0.78rem; color: var(--muted); }
+  .style-chip strong { color: var(--navy-deep); display: block; font-weight: 600; }
+
+  .name-field { margin-top: 18px; }
+  .name-field label { display: block; font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 6px; }
+
+  .section-card {
+    background: var(--paper-raised); border: 1px solid var(--line); border-top: 3px solid var(--teal);
+    border-radius: 4px; padding: 26px 24px; margin-bottom: 22px;
   }
-  .progress-bar-wrap { background: #edf2f7; border-radius: 99px; height: 6px; margin-bottom: 8px; }
-  .progress-bar { background: #1c7c74; height: 6px; border-radius: 99px; transition: width 0.4s ease; }
-  .progress-label { font-family: monospace; font-size: 0.72rem; color: #718096; margin-bottom: 20px; text-align: right; }
   .statement-block { margin-bottom: 22px; }
-  .statement-text { font-size: 0.94rem; color: #2d3748; margin-bottom: 10px; font-weight: 500; }
+  .statement-block:last-child { margin-bottom: 0; }
+  .statement-text { font-size: 0.92rem; color: var(--ink); margin-bottom: 10px; font-weight: 500; }
   .likert { display: flex; gap: 6px; }
   .likert-opt {
-    flex: 1; text-align: center; padding: 10px 4px; border-radius: 8px;
-    border: 2px solid #e2e8f0; cursor: pointer; font-size: 0.78rem; color: #718096;
-    transition: all .15s; user-select: none;
+    flex: 1; text-align: center; padding: 10px 4px; border-radius: 3px;
+    border: 1px solid var(--line); cursor: pointer; font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem; color: var(--muted); transition: all .15s ease; user-select: none;
   }
-  .likert-opt:hover { border-color: #a3bffa; }
-  .likert-opt.selected { border-color: #4a2f6b; background: #4a2f6b; color: #fff; font-weight: 700; }
-  .results { display: none; }
-  .primary-style {
-    background: linear-gradient(135deg, #4a2f6b, #1e3a5f);
-    color: #fff; border-radius: 14px; padding: 20px; margin-bottom: 18px;
+  .likert-opt:hover { border-color: var(--teal); color: var(--teal-deep); }
+  .likert-opt.selected { border-color: var(--teal); background: var(--teal); color: #fff; font-weight: 700; }
+  .likert-caption { display: flex; justify-content: space-between; font-size: 0.68rem; color: #a9b6b8; margin-top: 4px; }
+
+  .btn {
+    display: block; width: 100%; padding: 13px; background: var(--teal); color: #fff; border: none;
+    border-radius: 3px; font-size: 0.92rem; font-weight: 600; cursor: pointer; margin-top: 10px;
+    letter-spacing: 0.01em; transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.2s;
   }
-  .primary-style .label { font-size: 0.75rem; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px; }
-  .primary-style .name { font-size: 1.4rem; font-weight: 700; margin: 4px 0; }
-  .style-card {
-    background: #f7fafc; border-left: 4px solid #cbd5e0; border-radius: 10px;
-    padding: 14px 16px; margin-bottom: 10px;
+  .btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .restart-btn {
+    margin-top: 20px; background: #fff; color: var(--navy-deep); border: 1px solid var(--line);
+    border-radius: 3px; padding: 12px; font-size: 0.88rem; font-weight: 600; cursor: pointer; width: 100%;
+    transition: all 0.2s;
   }
-  .style-card .sname { font-weight: 700; font-size: 0.92rem; color: #2d3748; }
-  .style-card .sscore { float: right; color: #a0aec0; font-weight: 700; }
-  .style-card .sdesc { font-size: 0.82rem; color: #4a5568; margin-top: 6px; }
-  .style-card .swhen { font-size: 0.78rem; color: #718096; margin-top: 6px; }
-  .bar-chart { margin-top: 10px; }
-  .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-  .bar-label { width: 100px; font-size: 0.78rem; color: #4a5568; flex-shrink: 0; }
-  .bar-bg { flex: 1; background: #edf2f7; border-radius: 6px; height: 22px; overflow: hidden; }
-  .bar-fill { height: 100%; display:flex; align-items:center; justify-content:flex-end; padding-right:6px; color:#fff; font-size:0.7rem; font-weight:700; border-radius:6px; transition: width .5s; }
-  .bar-val { width: 26px; font-size: 0.78rem; color: #a0aec0; font-weight: 700; }
-  input[type=text] { width:100%; padding:10px; border:1px solid #cbd5e0; border-radius:8px; font-size:0.9rem; }
+  .restart-btn:hover { background: var(--paper); border-color: var(--teal); }
+
+  /* Results */
+  .results { display: none; background: var(--paper-raised); border: 1px solid var(--line); border-top: 3px solid var(--teal); border-radius: 4px; padding: 30px 26px; }
+  .results h2 { font-family: 'Fraunces', serif; font-size: 1.35rem; font-weight: 600; color: var(--navy-deep); margin-bottom: 6px; }
+  .results .subtitle { font-size: 0.85rem; color: var(--muted); margin-bottom: 24px; }
+  .block-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold-deep); font-weight: 600; margin: 24px 0 12px; }
+  .block-label:first-of-type { margin-top: 0; }
+
+  .primary-banner { background: var(--navy-deep); color: #fff; border-radius: 4px; padding: 22px 22px; margin-bottom: 6px; }
+  .primary-banner .label { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.7; }
+  .primary-banner .name { font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 600; margin: 6px 0 8px; }
+  .primary-banner .tag { font-size: 0.85rem; font-weight: 400; opacity: 0.8; }
+  .primary-banner .desc { font-size: 0.85rem; opacity: 0.9; line-height: 1.5; }
+
+  .bar-chart { margin: 6px 0; }
+  .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .bar-label { width: 150px; font-size: 0.78rem; color: var(--muted); text-align: right; flex-shrink: 0; }
+  .bar-bg { flex: 1; background: var(--line); border-radius: 99px; height: 16px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 99px; transition: width 0.8s ease; display: flex; align-items: center; justify-content: flex-end; padding-right: 6px; font-size: 0.68rem; font-weight: 700; color: #fff; }
+  .bar-val { width: 30px; font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; font-weight: 700; color: var(--navy-deep); }
+
+  .style-card { border-radius: 4px; padding: 18px; margin-bottom: 12px; border: 1px solid var(--line); border-left: 4px solid; }
+  .style-card.first { background: #f2f8f7; border-left-color: var(--teal); }
+  .style-card.second { background: #fbf6ec; border-left-color: var(--gold); }
+  .style-card.third { background: #f4f6f7; border-left-color: var(--navy); }
+  .style-card.lowest { background: var(--paper); border-left-color: var(--line); }
+  .style-card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .style-card .sname { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.02rem; color: var(--navy-deep); }
+  .style-card .sname .tag { font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 400; color: var(--muted); margin-left: 6px; }
+  .style-card .sscore { font-family: 'IBM Plex Mono', monospace; font-size: 0.9rem; font-weight: 700; color: var(--muted); }
+  .style-card .sdesc { font-size: 0.85rem; color: var(--ink); line-height: 1.55; margin-bottom: 8px; }
+  .style-card .swhen { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+  .style-card .snote { font-size: 0.78rem; color: var(--muted); margin-top: 6px; }
+
+  .footnote { font-size: 0.78rem; color: var(--muted); margin-top: 18px; line-height: 1.55; }
+
+  .email-box { margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--line); }
+  .email-box .block-label { margin: 0 0 8px; }
+  .email-box p { font-size: 0.82rem; color: var(--muted); margin-bottom: 12px; }
+  #emailStatus { font-family: 'IBM Plex Mono', monospace; font-size: 0.76rem; color: #a6402f; margin-top: 8px; }
+
+  input[type=text], input[type=email] { width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 3px; font-size: 0.9rem; font-family: 'Inter', sans-serif; }
 </style>
 </head>
 <body>
 
+<div class="page-head">
+  <div class="eyebrow">MGTO BA01 · Habilidades Directivas I</div>
+  <h1>Estilos de Liderazgo (Goleman)</h1>
+  <p class="lede">Descubre cómo ejerces influencia cuando lideras a otras personas.</p>
+</div>
+
 <div class="container">
 
   <!-- INTRO -->
-  <div class="card" id="introCard">
-    <h1>🎯 Test de Estilos de Liderazgo</h1>
-    <p class="subtitle">Basado en los 6 estilos de liderazgo de Daniel Goleman</p>
+  <div class="intro-card" id="introCard">
+    <h2>¿Qué es el Test de Estilos de Liderazgo?</h2>
+    <p>Daniel Goleman identificó <strong>6 estilos de liderazgo</strong> que describen las distintas formas en que una persona ejerce influencia sobre un equipo. Ningún estilo es "el bueno" en abstracto: los líderes más efectivos dominan varios y los alternan según la situación.</p>
+    <div class="styles-grid">
+      <div class="style-chip"><strong>Visionario</strong>"Ven conmigo"</div>
+      <div class="style-chip"><strong>Coach</strong>"Inténtalo"</div>
+      <div class="style-chip"><strong>Afiliativo</strong>"Las personas primero"</div>
+      <div class="style-chip"><strong>Democrático</strong>"¿Qué piensas tú?"</div>
+      <div class="style-chip"><strong>Timonel</strong>"Haz como yo, ahora"</div>
+      <div class="style-chip"><strong>Autoritario</strong>"Haz lo que digo"</div>
+    </div>
     <p><strong>Instrucciones:</strong> Vas a leer 30 afirmaciones sobre cómo actúas cuando lideras a otras personas. Para cada una, indica con qué frecuencia describe tu comportamiento real (no el ideal), en una escala de <strong>1 (Nunca) a 5 (Siempre)</strong>. Sé honesto/a: no hay respuestas correctas.</p>
-    <div style="margin-top:18px;">
-      <label style="display:block;font-size:0.85rem;font-weight:600;color:#2d3748;margin-bottom:6px;">Tu nombre:</label>
+    <div class="name-field">
+      <label for="studentName">Tu nombre</label>
       <input type="text" id="studentName" placeholder="Ej: María Pérez">
     </div>
     <button class="btn" onclick="startTest()">Comenzar Test →</button>
   </div>
 
   <!-- TEST -->
-  <div class="card" id="testArea" style="display:none;">
+  <div id="testArea" style="display:none;">
     <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
     <div class="progress-label" id="progressLabel">Página 1 de 3</div>
-    <div id="questionsContainer"></div>
+    <div class="section-card">
+      <div id="questionsContainer"></div>
+    </div>
     <button class="btn" id="nextBtn" onclick="nextPage()" disabled>Siguiente →</button>
   </div>
 
   <!-- RESULTS -->
-  <div class="card results" id="resultsArea"></div>
+  <div class="results" id="resultsArea"></div>
 
 </div>
 
@@ -117,44 +188,44 @@ const STYLES = {
   VI: {
     name: 'Visionario',
     tag: '"Ven conmigo"',
-    color: '#553c9a',
+    color: '#123a4d',
     desc: 'Moviliza a las personas hacia una visión compartida, dando sentido y dirección al trabajo.',
-    when: '✅ Funciona bien cuando el equipo necesita rumbo claro. ⚠️ Pierde fuerza con expertos que ya saben más que el líder.'
+    when: 'Funciona bien cuando el equipo necesita rumbo claro. Pierde fuerza con expertos que ya saben más que el líder.'
   },
   CO: {
     name: 'Coach',
     tag: '"Inténtalo"',
-    color: '#2b6cb0',
+    color: '#1c7c74',
     desc: 'Desarrolla a las personas conectando sus metas personales con los objetivos del equipo.',
-    when: '✅ Muy efectivo a largo plazo para retener y hacer crecer talento. ⚠️ Requiere tiempo; poco útil en una crisis urgente.'
+    when: 'Muy efectivo a largo plazo para retener y hacer crecer talento. Requiere tiempo; poco útil en una crisis urgente.'
   },
   AF: {
     name: 'Afiliativo',
     tag: '"Las personas primero"',
     color: '#276749',
     desc: 'Construye armonía, vínculos y confianza dentro del equipo.',
-    when: '✅ Ideal para sanar conflictos o dar apoyo en momentos de estrés. ⚠️ En exceso, evita el feedback correctivo necesario.'
+    when: 'Ideal para sanar conflictos o dar apoyo en momentos de estrés. En exceso, evita el feedback correctivo necesario.'
   },
   DE: {
     name: 'Democrático',
     tag: '"¿Qué piensas tú?"',
-    color: '#c05621',
+    color: '#b8862b',
     desc: 'Genera compromiso construyendo decisiones de forma participativa.',
-    when: '✅ Aprovecha el conocimiento colectivo del equipo. ⚠️ Lento en crisis o cuando se requiere una decisión rápida.'
+    when: 'Aprovecha el conocimiento colectivo del equipo. Lento en crisis o cuando se requiere una decisión rápida.'
   },
   TI: {
     name: 'Timonel (Marcapasos)',
     tag: '"Haz como yo, ahora"',
     color: '#702459',
     desc: 'Fija estándares muy altos de desempeño y da el ejemplo personalmente.',
-    when: '✅ Funciona con equipos altamente competentes y motivados. ⚠️ Usado en exceso abruma y desmotiva a equipos menos experimentados.'
+    when: 'Funciona con equipos altamente competentes y motivados. Usado en exceso abruma y desmotiva a equipos menos experimentados.'
   },
   AU: {
     name: 'Autoritario (Coercitivo)',
     tag: '"Haz lo que digo"',
-    color: '#822727',
+    color: '#a6402f',
     desc: 'Exige cumplimiento inmediato mediante instrucciones directas.',
-    when: '✅ Útil solo en crisis, giros radicales o con problemas de desempeño graves. ⚠️ Sostenido en el tiempo, es el estilo con peor impacto en el clima laboral.'
+    when: 'Útil solo en crisis, giros radicales o con problemas de desempeño graves. Sostenido en el tiempo, es el estilo con peor impacto en el clima laboral.'
   }
 };
 
@@ -218,7 +289,7 @@ function startTest() {
   const nameInput = document.getElementById('studentName');
   const name = nameInput.value.trim();
   if (!name) {
-    nameInput.style.borderColor = '#e53e3e';
+    nameInput.style.borderColor = '#a6402f';
     nameInput.focus();
     return;
   }
@@ -290,14 +361,14 @@ function showResults() {
 
   const primary = STYLES[sorted[0][0]];
   let html = `
-    <h1>🎯 Tu Perfil de Liderazgo</h1>
+    <h2>Tu Perfil de Liderazgo</h2>
     <p class="subtitle">Hola ${studentName}, este es tu resultado</p>
-    <div class="primary-style">
+    <div class="primary-banner">
       <div class="label">Tu estilo dominante</div>
-      <div class="name">${primary.name} <span style="font-size:0.85rem;font-weight:400;opacity:0.85;">${primary.tag}</span></div>
-      <div style="font-size:0.85rem;opacity:0.9;">${primary.desc}</div>
+      <div class="name">${primary.name} <span class="tag">${primary.tag}</span></div>
+      <div class="desc">${primary.desc}</div>
     </div>
-    <div style="font-weight:700;color:#2d3748;margin:20px 0 10px;">📊 Tu perfil completo:</div>
+    <div class="block-label">Tu perfil completo</div>
     <div class="bar-chart">
   `;
   sorted.forEach(([code, score]) => {
@@ -313,12 +384,16 @@ function showResults() {
   });
   html += '</div>';
 
-  html += `<div style="font-weight:700;color:#2d3748;margin:22px 0 10px;">📖 Detalle de tus 3 estilos más usados:</div>`;
-  sorted.slice(0, 3).forEach(([code, score]) => {
+  const cardClass = ['first', 'second', 'third'];
+  html += `<div class="block-label">Detalle de tus 3 estilos más usados</div>`;
+  sorted.slice(0, 3).forEach(([code, score], idx) => {
     const s = STYLES[code];
     html += `
-      <div class="style-card" style="border-left-color:${s.color};">
-        <span class="sname">${s.name}</span><span class="sscore">${score}/${maxScore}</span>
+      <div class="style-card ${cardClass[idx]}">
+        <div class="style-card-head">
+          <span class="sname">${s.name}<span class="tag">${s.tag}</span></span>
+          <span class="sscore">${score}/${maxScore}</span>
+        </div>
         <div class="sdesc">${s.desc}</div>
         <div class="swhen">${s.when}</div>
       </div>
@@ -326,25 +401,28 @@ function showResults() {
   });
 
   const lowest = sorted[sorted.length - 1];
-  html += `<div style="font-weight:700;color:#2d3748;margin:22px 0 10px;">🔻 Tu estilo menos usado:</div>`;
-  html += `<div class="style-card" style="border-left-color:#cbd5e0;">
-      <span class="sname">${STYLES[lowest[0]].name}</span><span class="sscore">${lowest[1]}/${maxScore}</span>
+  html += `<div class="block-label">Tu estilo menos usado</div>`;
+  html += `<div class="style-card lowest">
+      <div class="style-card-head">
+        <span class="sname">${STYLES[lowest[0]].name}</span>
+        <span class="sscore">${lowest[1]}/${maxScore}</span>
+      </div>
       <div class="sdesc">${STYLES[lowest[0]].desc}</div>
-      <p style="font-size:0.78rem;color:#a0aec0;margin-top:6px;">No es un defecto — pero si tu equipo alguna vez necesita este estilo, probablemente no sea tu reacción natural.</p>
+      <p class="snote">No es un defecto — pero si tu equipo alguna vez necesita este estilo, probablemente no sea tu reacción natural.</p>
     </div>`;
 
-  html += `<p style="font-size:0.78rem;color:#a0aec0;margin-top:16px;">📌 Los líderes más efectivos, según Goleman, dominan varios estilos y los alternan según la situación — ningún estilo es "el bueno" en abstracto.</p>`;
+  html += `<p class="footnote">Los líderes más efectivos, según Goleman, dominan varios estilos y los alternan según la situación — ningún estilo es "el bueno" en abstracto.</p>`;
 
   // Guardar resultados para poder armar el correo más abajo
   lastResults = { sorted, primary, lowest, maxScore };
 
   html += `
-    <div style="margin-top:26px;padding-top:22px;border-top:1px solid #e2e8f0;">
-      <div style="font-weight:700;color:#2d3748;margin-bottom:8px;">📧 Recibir estos resultados por correo</div>
-      <p style="font-size:0.82rem;color:#718096;margin-bottom:12px;">Ingresa tu correo y se abrirá tu programa de correo con un mensaje ya redactado, listo para que lo envíes a ti mismo/a.</p>
-      <input type="email" id="resultEmail" placeholder="tu.correo@ejemplo.com" style="width:100%;padding:10px;border:1px solid #cbd5e0;border-radius:8px;font-size:0.9rem;margin-bottom:10px;">
+    <div class="email-box">
+      <div class="block-label">Recibir estos resultados por correo</div>
+      <p>Ingresa tu correo y se abrirá tu programa de correo con un mensaje ya redactado, listo para que lo envíes a ti mismo/a.</p>
+      <input type="email" id="resultEmail" placeholder="tu.correo@ejemplo.com" style="margin-bottom:10px;">
       <button class="btn" onclick="sendResultsByEmail()">Enviarme mis resultados →</button>
-      <div id="emailStatus" style="font-size:0.78rem;color:#c53030;margin-top:8px;"></div>
+      <div id="emailStatus"></div>
     </div>
   `;
 
@@ -362,12 +440,12 @@ function sendResultsByEmail() {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   if (!emailRegex.test(email)) {
-    statusEl.textContent = '⚠️ Ingresa un correo válido.';
-    emailInput.style.borderColor = '#c53030';
+    statusEl.textContent = 'Ingresa un correo válido.';
+    emailInput.style.borderColor = '#a6402f';
     return;
   }
-  emailInput.style.borderColor = '#cbd5e0';
-  statusEl.style.color = '#718096';
+  emailInput.style.borderColor = 'var(--line)';
+  statusEl.style.color = 'var(--muted)';
   statusEl.textContent = 'Abriendo tu programa de correo...';
 
   const { sorted, primary, lowest, maxScore } = lastResults;
@@ -397,7 +475,7 @@ function restartTest() {
   studentName = '';
   lastResults = null;
   const nameInput = document.getElementById('studentName');
-  if (nameInput) { nameInput.value = ''; nameInput.style.borderColor = '#cbd5e0'; }
+  if (nameInput) { nameInput.value = ''; nameInput.style.borderColor = 'var(--line)'; }
   document.getElementById('resultsArea').style.display = 'none';
   document.getElementById('introCard').style.display = 'block';
   window.scrollTo({ top: 0, behavior: 'smooth' });
