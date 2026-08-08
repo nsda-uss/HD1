@@ -20,6 +20,10 @@
     --gold-deep: #93691f;
     --slate: #5c6670;
     --slate-deep: #3f4750;
+    --wine: #7a3b46;
+    --wine-deep: #5c2c35;
+    --forest: #2f6b4f;
+    --forest-deep: #234f3a;
     --line: #d7dfe1;
     --muted: #5c6b70;
   }
@@ -96,6 +100,8 @@
   .tool-card.gold::before { background: var(--gold); }
   .tool-card.indigo::before { background: var(--navy); }
   .tool-card.slate::before { background: var(--slate); }
+  .tool-card.wine::before { background: var(--wine); }
+  .tool-card.forest::before { background: var(--forest); }
 
   .tool-eyebrow {
     font-family: 'IBM Plex Mono', monospace;
@@ -108,6 +114,8 @@
   .tool-card.gold .tool-eyebrow { color: var(--gold-deep); }
   .tool-card.indigo .tool-eyebrow { color: var(--navy); }
   .tool-card.slate .tool-eyebrow { color: var(--slate-deep); }
+  .tool-card.wine .tool-eyebrow { color: var(--wine-deep); }
+  .tool-card.forest .tool-eyebrow { color: var(--forest-deep); }
 
   .tool-card h3 { font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 600; color: var(--navy-deep); margin-bottom: 4px; }
   .tool-card .tool-tag { font-size: 0.8rem; color: var(--muted); font-style: italic; margin-bottom: 14px; }
@@ -123,6 +131,8 @@
   .tool-card.gold .tool-btn { background: var(--gold); }
   .tool-card.indigo .tool-btn { background: var(--navy); }
   .tool-card.slate .tool-btn { background: var(--slate-deep); }
+  .tool-card.wine .tool-btn { background: var(--wine-deep); }
+  .tool-card.forest .tool-btn { background: var(--forest-deep); }
   .tool-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
   .tool-btn:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
 </style>
@@ -162,6 +172,22 @@
       <div class="tool-tag">Dominante · Influyente · Estable · Concienzudo</div>
       <p class="desc">Identifica tu tendencia de comportamiento en el trabajo: ¿decides con rapidez, motivas al equipo, sostienes la calma o cuidas el detalle?</p>
       <a class="tool-btn" href="disc_test.html">Iniciar test DISC →</a>
+    </div>
+
+    <div class="tool-card wine">
+      <div class="tool-eyebrow">Actividad colaborativa</div>
+      <h3>Encuesta de Curso</h3>
+      <div class="tool-tag">3 características clave</div>
+      <p class="desc">Aporta 3 características clave sobre el tema de la sesión y luego revisa cómo respondió el resto del curso.</p>
+      <a class="tool-btn" href="encuesta_tema.html">Ir a la encuesta →</a>
+    </div>
+
+    <div class="tool-card forest">
+      <div class="tool-eyebrow">Simulación estratégica</div>
+      <h3>Simulador CMI</h3>
+      <div class="tool-tag">Cuadro de Mando Integral</div>
+      <p class="desc">Toma decisiones trimestrales al mando de una organización — incluyendo un hospital y una red de clínicas — y observa el impacto en las 4 perspectivas del CMI.</p>
+      <a class="tool-btn" href="simulador_cmi.html">Iniciar simulador →</a>
     </div>
 
     <div class="tool-card indigo">

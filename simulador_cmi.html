@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulador CMI — Netflix · Uber · Starbucks · Salud</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  :root {
+    --bg: #f7f6f3;
+    --surface: #ffffff;
+    --surface2: #f0efe9;
+    --border: rgba(0,0,0,0.1);
+    --border2: rgba(0,0,0,0.18);
+    --text: #1a1a18;
+    --text2: #6b6a64;
+    --text3: #a8a79f;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --green: #3B6D11; --green-bg: #EAF3DE;
+    --blue: #185FA5; --blue-bg: #E6F1FB;
+    --amber: #854F0B; --amber-bg: #FAEEDA;
+    --purple: #534AB7; --purple-bg: #EEEDFE;
+    --pos: #27500A; --pos-bg: #EAF3DE;
+    --neg: #791F1F; --neg-bg: #FCEBEB;
+    --neu: #444441; --neu-bg: #F1EFE8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a18; --surface: #242422; --surface2: #2e2e2b;
+      --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.15);
+      --text: #e8e7e0; --text2: #9a9990; --text3: #5a5955;
+      --green: #97C459; --green-bg: #173404;
+      --blue: #85B7EB; --blue-bg: #042C53;
+      --amber: #EF9F27; --amber-bg: #412402;
+      --purple: #AFA9EC; --purple-bg: #26215C;
+      --pos: #C0DD97; --pos-bg: #173404;
+      --neg: #F09595; --neg-bg: #501313;
+      --neu: #B4B2A9; --neu-bg: #2C2C2A;
+    }
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+    padding-left: calc(64px + 1rem);
+  }
+  @media (max-width: 600px) {
+    body { padding-left: calc(48px + 1rem); }
+  }
+  .page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .page-title {
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .page-sub {
+    font-size: 13px;
+    color: var(--text3);
+  }
+  .card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+  }
+  .app {
+    width: 100%;
+    max-width: 680px;
+  }
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .company-badge {
+    font-size: 13px;
+    background: var(--surface2);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 4px 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .quarter-badge {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .scorecard {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .sc-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+  }
+  .sc-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .sc-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .sc-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text2);
+  }
+  .sc-metrics { display: flex; flex-direction: column; gap: 5px; }
+  .sc-metric {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+  }
+  .sc-metric-name { color: var(--text2); }
+  .sc-metric-val { font-weight: 500; font-size: 13px; color: var(--text); }
+  .bar-wrap {
+    width: 60px; height: 5px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-left: 6px;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width .5s ease;
+  }
+  .decision-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .decisions-grid { display: flex; flex-direction: column; gap: 7px; }
+  .dec-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+  .dec-card:hover { background: var(--surface2); border-color: var(--border2); }
+  .dec-card.selected { border: 1.5px solid #378ADD; background: var(--blue-bg); }
+  .dec-card.selected .dec-name { color: var(--blue); }
+  .dec-name { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+  .dec-desc { font-size: 12px; color: var(--text2); line-height: 1.45; }
+  .dec-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 6px; }
+  .dec-tag { font-size: 10px; padding: 2px 7px; border-radius: 20px; }
+  .apply-btn {
+    width: 100%;
+    margin-top: 8px;
+    padding: 10px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    background: transparent;
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .apply-btn:hover:not(:disabled) { background: var(--surface2); }
+  .apply-btn:disabled { opacity: 0.4; cursor: default; }
+  .feedback-box {
+    background: var(--surface);
+    border: 1.5px solid var(--border2);
+    border-left: 4px solid #185FA5;
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  }
+  .feedback-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--blue);
+    margin-bottom: 7px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .feedback-body { font-size: 13px; color: var(--text); line-height: 1.6; }
+  .deltas { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
+  .delta-pill { font-size: 11px; padding: 3px 9px; border-radius: 20px; font-weight: 500; }
+  .delta-pos { background: var(--pos-bg); color: var(--pos); }
+  .delta-neg { background: var(--neg-bg); color: var(--neg); }
+  .event-box {
+    background: #FFFBEB;
+    border: 1.5px solid #D97706;
+    border-left: 4px solid #D97706;
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    box-shadow: 0 1px 6px rgba(217,119,6,0.10);
+  }
+  .event-box-title {
+    font-size: 11px;
+    font-weight: 500;
+    color: #92400E;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .event-box-body {
+    font-size: 13px;
+    font-weight: 500;
+    color: #78350F;
+    line-height: 1.5;
+  }
+  .game-over { text-align: center; padding: 2rem 1rem; }
+  .game-over-title { font-size: 20px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
+  .score-big { font-size: 52px; font-weight: 500; color: var(--text); margin-bottom: 2px; font-family: 'DM Mono', monospace; }
+  .score-label { font-size: 13px; color: var(--text2); margin-bottom: 18px; }
+  .game-over-sub { font-size: 13px; color: var(--text2); line-height: 1.6; margin-bottom: 20px; max-width: 480px; margin-left: auto; margin-right: auto; }
+  .btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    padding: 8px 16px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    background: transparent;
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .btn:hover { background: var(--surface2); }
+  .selector-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .sel-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 14px;
+    cursor: pointer;
+    text-align: center;
+    transition: border-color .15s, background .15s;
+  }
+  .sel-card:hover { background: var(--surface2); border-color: var(--border2); }
+  .sel-name { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 5px; }
+  .sel-desc { font-size: 11px; color: var(--text2); line-height: 1.45; }
+  .sel-title { font-size: 16px; font-weight: 500; color: var(--text); margin-bottom: 14px; text-align: center; }
+  .hint { font-size: 11px; color: var(--text3); text-align: center; margin-top: 8px; }
+  .back-btn {
+    background: none;
+    border: none;
+    font-size: 12px;
+    color: var(--text3);
+    cursor: pointer;
+    padding: 0;
+    font-family: 'DM Sans', sans-serif;
+    margin-top: 10px;
+    display: block;
+    margin-left: auto;
+  }
+  .back-btn:hover { color: var(--text2); }
+  @media (max-width: 500px) {
+    .scorecard { grid-template-columns: 1fr; }
+    .selector-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="page-title">Simulador de Cuadro de Mando Integral</div>
+  <div class="page-sub">Toma decisiones como CEO y observa el impacto en las 4 perspectivas</div>
+</div>
+
+<div class="app" id="app"></div>
+
+<script>
+const QUARTERS = 5;
+
+const PERSPECTIVES = [
+  {id:'fin',label:'Financiera',icon:'ti-coin',iconBg:'var(--green-bg)',iconColor:'var(--green)',
+   metrics:[{k:'ingresos',label:'Ingresos'},{k:'margen',label:'Margen'}]},
+  {id:'cli',label:'Clientes',icon:'ti-users',iconBg:'var(--blue-bg)',iconColor:'var(--blue)',
+   metrics:[{k:'nps',label:'NPS'},{k:'retencion',label:'Retención'}]},
+  {id:'pro',label:'Procesos',icon:'ti-settings',iconBg:'var(--amber-bg)',iconColor:'var(--amber)',
+   metrics:[{k:'calidad',label:'Calidad'},{k:'ciclo',label:'Eficiencia'}]},
+  {id:'apr',label:'Aprendizaje',icon:'ti-plant',iconBg:'var(--purple-bg)',iconColor:'var(--purple)',
+   metrics:[{k:'satisf',label:'Empleados'},{k:'formacion',label:'Talento'}]},
+];
+
+const COMPANIES = {
+  netflix:{
+    name:'Netflix', sector:'Streaming & contenido', icon:'ti-device-tv', color:'#E24B4A',
+    initMetrics:{ingresos:38,margen:17,nps:61,retencion:75,calidad:80,ciclo:70,satisf:68,formacion:55},
+    fmt:(k,v)=>({ingresos:`$${v.toFixed(1)}B`,margen:`${v.toFixed(0)}%`,nps:`${v.toFixed(0)}`,retencion:`${v.toFixed(0)}%`,calidad:`${v.toFixed(0)}%`,ciclo:`${v.toFixed(0)}%`,satisf:`${v.toFixed(0)}%`,formacion:`${v.toFixed(0)}%`}[k]),
+    events:[
+      'Disney+ y Apple TV lanzan contenido exclusivo masivo. La guerra del streaming se intensifica.',
+      'Aumenta el "password sharing": millones usan cuentas ajenas sin pagar.',
+      'Un productor estrella amenaza con irse a la competencia.',
+      'Reguladores europeos exigen 30% de contenido local en la plataforma.',
+      'Último trimestre: Wall Street vigila de cerca la retención de suscriptores.',
+    ],
+    decisions:[
+      {id:'a',name:'Producir serie original de alto presupuesto',
+       desc:'Invertir $200M en una superproducción global. Alto potencial de atraer suscriptores, pero el riesgo de fracaso es enorme y el margen se desploma.',
+       tags:[{t:'Clientes ++',c:'delta-pos'},{t:'Financiera −−',c:'delta-neg'},{t:'Procesos −',c:'delta-neg'}],
+       delta:{ingresos:7,margen:-12,nps:20,retencion:15,calidad:8,ciclo:-8,satisf:8,formacion:5},
+       feedback:'La serie se convirtió en fenómeno global — tendencia en 80 países. NPS y retención se dispararon. Sin embargo, el margen cayó 12 puntos y los equipos de producción trabajan al límite. El éxito tiene un costo real.'},
+      {id:'b',name:'Eliminar cuentas compartidas y cobrar extra',
+       desc:'Restringir contraseñas fuera del hogar y cobrar por perfiles adicionales. Ingresos inmediatos casi garantizados, pero el riesgo de cancelaciones masivas es alto.',
+       tags:[{t:'Financiera ++',c:'delta-pos'},{t:'Clientes −−',c:'delta-neg'},{t:'Procesos +',c:'delta-pos'}],
+       delta:{ingresos:14,margen:12,nps:-22,retencion:-16,calidad:4,ciclo:8,satisf:-3,formacion:-2},
+       feedback:'Los ingresos crecieron $14B en el trimestre. Pero el NPS cayó 22 puntos — la peor caída en años. Millones cancelaron su suscripción y las redes sociales ardieron. Los ingresos suben, la marca se erosiona.'},
+      {id:'c',name:'Lanzar plan con publicidad (ad-supported)',
+       desc:'Tier más barato financiado por anuncios. Amplía base de usuarios en mercados emergentes, pero complejiza la operación y afecta la experiencia.',
+       tags:[{t:'Clientes +',c:'delta-pos'},{t:'Financiera +',c:'delta-pos'},{t:'Procesos −−',c:'delta-neg'}],
+       delta:{ingresos:8,margen:5,nps:7,retencion:10,calidad:-10,ciclo:-12,satisf:-6,formacion:3},
+       feedback:'El plan básico atrajo 18M de nuevos usuarios en un trimestre. Pero integrar publicidad rompió los procesos internos: la eficiencia cayó 12 puntos y el equipo de producto está al límite gestionando dos experiencias distintas.'},
+      {id:'d',name:'Invertir en IA de recomendación',
+       desc:'Mejorar el algoritmo para reducir el tiempo de decisión y aumentar horas de visualización. Inversión alta; el equipo trabajará al límite durante meses.',
+       tags:[{t:'Procesos ++',c:'delta-pos'},{t:'Clientes +',c:'delta-pos'},{t:'Financiera −',c:'delta-neg'}],
+       delta:{ingresos:4,margen:-8,nps:13,retencion:11,calidad:16,ciclo:18,satisf:-8,formacion:14},
+       feedback:'El nuevo algoritmo redujo el "¿qué veo hoy?" y aumentó el tiempo en plataforma un 22%. Procesos y calidad mejoraron notablemente. Pero el costo fue alto: margen −8 y el equipo de ingeniería acusa agotamiento severo.'},
+      {id:'e',name:'Expandir catálogo de contenido local',
+       desc:'Coproducir series en Latinoamérica, Corea y Europa. Cumple regulaciones, diversifica riesgo creativo, pero opera 12 producciones simultáneas es caótico.',
+       tags:[{t:'Clientes +',c:'delta-pos'},{t:'Aprendizaje +',c:'delta-pos'},{t:'Procesos −',c:'delta-neg'}],
+       delta:{ingresos:3,margen:-5,nps:14,retencion:9,calidad:7,ciclo:-10,satisf:12,formacion:11},
+       feedback:'Squid Game 2, una serie brasileña y una francesa: todas tendencia simultánea. La diversidad del catálogo se volvió ventaja competitiva. Pero coordinar 12 producciones internacionales destruyó la eficiencia operativa.'},
+      {id:'f',name:'Recortar presupuesto de contenido y enfocarse en datos',
+       desc:'Reducir producción original y usar analítica avanzada para solo producir lo que el algoritmo predice que tendrá éxito. Margen sube, creatividad cae.',
+       tags:[{t:'Financiera ++',c:'delta-pos'},{t:'Clientes −',c:'delta-neg'},{t:'Aprendizaje −',c:'delta-neg'}],
+       delta:{ingresos:2,margen:15,nps:-16,retencion:-12,calidad:-5,ciclo:10,satisf:-14,formacion:-8},
+       feedback:'El margen mejoró 15 puntos — los analistas de Wall Street aplaudieron. Pero sin contenido sorpresivo, el NPS cayó 16 puntos. Los creadores renunciaron en masa. Una organización de streaming sin riesgo creativo pierde su razón de ser.'},
+      {id:'h',name:'Pausar producciones nuevas y monetizar el catálogo existente',
+       desc:'En lugar de invertir en contenido nuevo, optimizar el catálogo actual con mejores metadatos, doblajes y campañas de redescubrimiento. Parece eficiente y rentable a corto plazo.',
+       tags:[{t:'Financiera +',c:'delta-pos'},{t:'Clientes −−',c:'delta-neg'},{t:'Aprendizaje −−',c:'delta-neg'}],
+       delta:{ingresos:2,margen:14,nps:-18,retencion:-16,calidad:-6,ciclo:4,satisf:-16,formacion:-14},
+       feedback:'El margen mejoró 14 puntos y los costos bajaron drásticamente. Pero sin contenido nuevo, los suscriptores no tienen razón para quedarse: retención −16, NPS −18. Los mejores guionistas y directores se fueron a la competencia. "Vivir del catálogo" es una trampa clásica de corto plazo que destruye valor de marca a largo plazo.'},
+      {id:'i',name:'Centralizar toda la tecnología en un solo equipo global',
+       desc:'Consolidar los equipos de ingeniería regionales en un único hub para "aumentar eficiencia y evitar duplicidades". Luce como una mejora operativa pero ignora el contexto local.',
+       tags:[{t:'Financiera +',c:'delta-pos'},{t:'Procesos −−',c:'delta-neg'},{t:'Aprendizaje −−',c:'delta-neg'}],
+       delta:{ingresos:1,margen:10,nps:-12,retencion:-8,calidad:-14,ciclo:-10,satisf:-18,formacion:-12},
+       feedback:'Los costos bajaron en papel, pero la realidad fue otra: los equipos regionales conocían los matices de cada mercado. Sin ellos, los problemas técnicos locales tardaron el doble en resolverse. La satisfacción del equipo colapsó −18 y la calidad del producto cayó 14 puntos. Centralizar sin considerar el conocimiento local es una de las fallas organizacionales más comunes.'},
+    ]
+  },
+  uber:{
+    name:'Uber', sector:'Plataforma de movilidad', icon:'ti-car', color:'#2C2C2A',
+    initMetrics:{ingresos:22,margen:8,nps:38,retencion:58,calidad:70,ciclo:55,satisf:45,formacion:20},
+    fmt:(k,v)=>({ingresos:`$${v.toFixed(1)}B`,margen:`${v.toFixed(0)}%`,nps:`${v.toFixed(0)}`,retencion:`${v.toFixed(0)}%`,calidad:`${v.toFixed(0)}%`,ciclo:`${v.toFixed(0)}%`,satisf:`${v.toFixed(0)}%`,formacion:`${v.toFixed(0)}%`}[k]),
+    events:[
+      'Protestas de conductores por tarifas bajas. La prensa te observa.',
+      'Nuevo competidor local entra al mercado con precios 30% más baratos.',
+      'Ciudad clave amenaza con prohibir el surge pricing por ley.',
+      'Accidente grave involucra a un conductor — cobertura mediática masiva.',
+      'Regulador exige clasificar conductores como empleados con beneficios.',
+    ],
+    decisions:[
+      {id:'a',name:'Subir tarifas a conductores un 20%',
+       desc:'Aumentar el porcentaje que reciben los conductores. Mejora oferta y calidad de servicio, pero el margen ya es muy estrecho y esto lo comprime aún más.',
+       tags:[{t:'Aprendizaje ++',c:'delta-pos'},{t:'Clientes +',c:'delta-pos'},{t:'Financiera −−',c:'delta-neg'}],
+       delta:{ingresos:-4,margen:-10,nps:14,retencion:12,calidad:12,ciclo:10,satisf:22,formacion:3},
+       feedback:'Los conductores volvieron a la plataforma en masa: +22 en satisfacción. Los tiempos de espera cayeron y el NPS subió 14 puntos. Pero el margen ya era crítico y ahora empeoró 10 puntos — la organización opera casi en breakeven.'},
+      {id:'b',name:'Lanzar Uber Premium en 10 ciudades',
+       desc:'Expandir la categoría de alto valor con vehículos de lujo. Más ingresos por viaje, pero requiere conductores especializados que no existen en volumen suficiente.',
+       tags:[{t:'Financiera ++',c:'delta-pos'},{t:'Clientes +',c:'delta-pos'},{t:'Procesos −−',c:'delta-neg'}],
+       delta:{ingresos:12,margen:10,nps:9,retencion:6,calidad:-12,ciclo:-14,satisf:-8,formacion:10},
+       feedback:'El segmento premium generó márgenes que la plataforma no veía hace años. Pero la calidad del servicio regular colapsó: los mejores conductores migraron al Premium, dejando el servicio estándar con tiempos de espera de 18 minutos promedio.'},
+      {id:'c',name:'Invertir masivamente en verificación y seguridad',
+       desc:'Filtros de antecedentes reforzados, seguro ampliado, cámara obligatoria en vehículos y botón de pánico mejorado. Costoso pero necesario tras el incidente mediático.',
+       tags:[{t:'Clientes ++',c:'delta-pos'},{t:'Procesos +',c:'delta-pos'},{t:'Financiera −−',c:'delta-neg'}],
+       delta:{ingresos:-2,margen:-12,nps:20,retencion:16,calidad:15,ciclo:6,satisf:8,formacion:12},
+       feedback:'La inversión en seguridad fue la correcta: el NPS subió 20 puntos — el mayor salto en la historia de la organización. Los reguladores retiraron la amenaza de cierre. El costo fue alto (margen −12), pero la alternativa era perder la licencia en la ciudad.'},
+      {id:'d',name:'Optimizar surge pricing con IA agresiva',
+       desc:'Precios dinámicos más agresivos en horas pico y eventos. Maximiza ingresos por viaje, pero los usuarios ya están al límite de tolerancia con los precios.',
+       tags:[{t:'Financiera ++',c:'delta-pos'},{t:'Clientes −−',c:'delta-neg'},{t:'Procesos +',c:'delta-pos'}],
+       delta:{ingresos:16,margen:14,nps:-20,retencion:-15,calidad:4,ciclo:12,satisf:3,formacion:0},
+       feedback:'Ingresos récord en horas pico — la junta directiva celebró. Pero el NPS cayó 20 puntos en un trimestre: el peor registro histórico. Los usuarios empezaron a caminar o tomar taxi. El competidor local ganó 8 puntos de cuota de mercado ese trimestre.'},
+      {id:'e',name:'Programa de certificación para conductores',
+       desc:'Cursos obligatorios de atención, manejo defensivo y uso de la app. Mientras se certifican, la oferta cae y los tiempos de espera aumentan significativamente.',
+       tags:[{t:'Aprendizaje ++',c:'delta-pos'},{t:'Clientes ~',c:''},{t:'Procesos −',c:'delta-neg'}],
+       delta:{ingresos:2,margen:-5,nps:6,retencion:-5,calidad:14,ciclo:-12,satisf:18,formacion:22},
+       feedback:'Los conductores certificados entregan un servicio notablemente mejor — la calidad subió 14 puntos. Pero durante los 3 meses de formación, la oferta disponible cayó 30% y los tiempos de espera se triplicaron. La retención de usuarios sufrió.'},
+      {id:'f',name:'Lanzar Uber Eats como negocio independiente',
+       desc:'Separar la operación de delivery y darle recursos propios. Diversifica ingresos pero divide el foco directivo y operacional en un momento crítico.',
+       tags:[{t:'Financiera +',c:'delta-pos'},{t:'Procesos −−',c:'delta-neg'},{t:'Aprendizaje −',c:'delta-neg'}],
+       delta:{ingresos:10,margen:3,nps:-6,retencion:-4,calidad:-14,ciclo:-16,satisf:-12,formacion:6},
+       feedback:'Uber Eats creció fuerte como entidad independiente y los ingresos subieron. Pero dividir la operación fue un desastre: la calidad del servicio de transporte cayó 14 puntos, los procesos se fragmentaron y el equipo se sintió abandonado por la dirección.'},
+      {id:'h',name:'Implementar bonos por número de viajes completados',
+       desc:'Sistema de incentivos que premia a conductores que completan más viajes por hora. Parece una forma justa de premiar la productividad, pero cambia los incentivos de forma peligrosa.',
+       tags:[{t:'Financiera +',c:'delta-pos'},{t:'Clientes −−',c:'delta-neg'},{t:'Aprendizaje −',c:'delta-neg'}],
+       delta:{ingresos:8,margen:7,nps:-18,retencion:-14,calidad:-16,ciclo:10,satisf:-10,formacion:-6},
+       feedback:'Los viajes por hora subieron y los ingresos mejoraron. Pero los conductores empezaron a aceptar rutas más cortas, cancelar viajes largos y conducir de forma más agresiva para completar más carreras. Las quejas de usuarios se dispararon: calidad −16, NPS −18. Un sistema de incentivos mal diseñado puede destruir exactamente el comportamiento que busca premiar.'},
+      {id:'i',name:'Externalizar el soporte al cliente a un call center de bajo costo',
+       desc:'Reemplazar el equipo interno de atención al usuario por un proveedor externo más barato. El ahorro en costos es real y la lógica de "enfocarse en el core" suena sensata.',
+       tags:[{t:'Financiera +',c:'delta-pos'},{t:'Clientes −−',c:'delta-neg'},{t:'Procesos −',c:'delta-neg'}],
+       delta:{ingresos:1,margen:12,nps:-20,retencion:-14,calidad:-10,ciclo:-8,satisf:-8,formacion:-10},
+       feedback:'El margen mejoró 12 puntos. Pero el call center externo no conocía la plataforma, los tiempos de resolución se triplicaron y las respuestas eran genéricas. El NPS cayó 20 puntos — los usuarios prefieren no contactar soporte a enfrentarse al nuevo sistema. En plataformas, el soporte deficiente destruye la confianza más rápido que cualquier falla técnica.'},
+    ]
+  },
+  starbucks:{
+    name:'Starbucks', sector:'Retail de café', icon:'ti-coffee', color:'#0F6E56',
+    initMetrics:{ingresos:18,margen:15,nps:55,retencion:68,calidad:82,ciclo:65,satisf:60,formacion:40},
+    fmt:(k,v)=>({ingresos:`$${v.toFixed(1)}B`,margen:`${v.toFixed(0)}%`,nps:`${v.toFixed(0)}`,retencion:`${v.toFixed(0)}%`,calidad:`${v.toFixed(0)}%`,ciclo:`${v.toFixed(0)}%`,satisf:`${v.toFixed(0)}%`,formacion:`${v.toFixed(0)}%`}[k]),
+    events:[
+      'Competidor lanza café de especialidad a mitad de precio.',
+      'Viral en redes: clientes se quejan de tiempos de espera de 20 minutos.',
+      'Oportunidad de abrir 200 nuevas tiendas en Latinoamérica.',
+      'Sindicato de baristas exige mejores condiciones — amenaza de huelga.',
+      'Tendencia global: consumidores priorizan marcas con propósito ambiental real.',
+    ],
+    decisions:[
+      {id:'a',name:'Lanzar colección de bebidas de temporada premium',
+       desc:'Línea exclusiva con ingredientes exóticos y edición limitada. Viralidad casi garantizada, pero la complejidad operativa desborda a los baristas.',
+       tags:[{t:'Clientes ++',c:'delta-pos'},{t:'Financiera +',c:'delta-pos'},{t:'Procesos −−',c:'delta-neg'}],
+       delta:{ingresos:9,margen:5,nps:16,retencion:10,calidad:-12,ciclo:-14,satisf:-10,formacion:4},
+       feedback:'La colección fue viral — 40M de menciones en redes. Las filas doblaron la cuadra. Pero los baristas están agotados: satisfacción −10, calidad −12. Varios locales fallaron en la preparación correcta de la bebida, generando quejas masivas por inconsistencia.'},
+      {id:'b',name:'Rediseñar el programa de lealtad (Stars)',
+       desc:'Nuevas recompensas personalizadas, gamificación y beneficios exclusivos por nivel. La complejidad del nuevo sistema ralentiza el servicio en caja y frustra a los baristas.',
+       tags:[{t:'Clientes ++',c:'delta-pos'},{t:'Financiera +',c:'delta-pos'},{t:'Procesos −',c:'delta-neg'}],
+       delta:{ingresos:6,margen:4,nps:18,retencion:18,calidad:2,ciclo:-10,satisf:-6,formacion:3},
+       feedback:'El nuevo programa disparó la retención 18 puntos — el mayor salto en 5 años. Los clientes frecuentes gastan 35% más. Pero la nueva app triplicó las preguntas en caja, el tiempo de atención subió y los baristas sienten que el sistema fue diseñado sin pensar en ellos.'},
+      {id:'c',name:'Invertir en bienestar integral de baristas',
+       desc:'Seguro médico ampliado, horarios flexibles, bonos por desempeño y sala de descanso renovada. Costoso a corto plazo, pero la rotación del 60% anual es insostenible.',
+       tags:[{t:'Aprendizaje ++',c:'delta-pos'},{t:'Clientes +',c:'delta-pos'},{t:'Financiera −−',c:'delta-neg'}],
+       delta:{ingresos:-2,margen:-12,nps:10,retencion:8,calidad:10,ciclo:12,satisf:25,formacion:20},
+       feedback:'La satisfacción de los baristas subió 25 puntos — récord histórico. La rotación cayó del 60% al 22% anual, lo que ahorra millones en reclutamiento. El servicio mejoró notablemente. Pero el costo fue real: margen −12 en el trimestre de inversión.'},
+      {id:'d',name:'Apertura acelerada: 200 nuevas tiendas',
+       desc:'Expansión agresiva en Latinoamérica. Crecimiento de ingresos garantizado, pero cada tienda nueva requiere baristas entrenados que hoy no existen en cantidad suficiente.',
+       tags:[{t:'Financiera ++',c:'delta-pos'},{t:'Procesos −−',c:'delta-neg'},{t:'Aprendizaje −−',c:'delta-neg'}],
+       delta:{ingresos:18,margen:2,nps:-12,retencion:-10,calidad:-16,ciclo:-18,satisf:-16,formacion:-10},
+       feedback:'Los ingresos crecieron $18B — Wall Street aplaudió. Pero la experiencia en las tiendas nuevas es desastrosa: baristas sin formación, procesos inexistentes, calidad −16. Los clientes en mercados maduros también lo sienten: la marca se diluyó visiblemente.'},
+      {id:'e',name:'Programa de sostenibilidad ambiental profunda',
+       desc:'Eliminar plásticos, cambiar a café 100% certificado y construir tiendas carbono-neutro. Costoso y operativamente disruptivo, pero alineado con la tendencia global.',
+       tags:[{t:'Clientes +',c:'delta-pos'},{t:'Aprendizaje +',c:'delta-pos'},{t:'Procesos −',c:'delta-neg'}],
+       delta:{ingresos:3,margen:-8,nps:14,retencion:8,calidad:-6,ciclo:-10,satisf:12,formacion:8},
+       feedback:'La iniciativa generó cobertura global positiva. Los clientes menores de 35 aumentaron su frecuencia de visita. Pero cambiar proveedores en 35.000 tiendas simultáneamente fue un caos operativo: calidad −6, eficiencia −10 durante la transición.'},
+      {id:'f',name:'Automatizar preparación con máquinas robóticas',
+       desc:'Implementar brazos robóticos para preparar bebidas estándar. Velocidad y consistencia mejoran, pero los baristas temen por sus empleos y la experiencia se vuelve fría.',
+       tags:[{t:'Procesos ++',c:'delta-pos'},{t:'Financiera +',c:'delta-pos'},{t:'Aprendizaje −−',c:'delta-neg'}],
+       delta:{ingresos:5,margen:10,nps:-8,retencion:-6,calidad:14,ciclo:20,satisf:-20,formacion:-12},
+       feedback:'La eficiencia operativa se disparó: +20 en ciclo, +14 en calidad técnica. El margen mejoró 10 puntos. Pero los baristas sienten que los están reemplazando — satisfacción −20, el peor registro histórico. Y los clientes notan que perdieron la calidez humana que diferenciaba a Starbucks.'},
+      {id:'h',name:'Estandarizar el menú globalmente y eliminar variaciones locales',
+       desc:'Reducir el menú a 40 productos globales y eliminar adaptaciones regionales. Simplifica la operación, reduce costos de insumos y "mejora la consistencia de marca".',
+       tags:[{t:'Financiera +',c:'delta-pos'},{t:'Clientes −−',c:'delta-neg'},{t:'Procesos +',c:'delta-pos'}],
+       delta:{ingresos:-2,margen:12,nps:-18,retencion:-14,calidad:8,ciclo:14,satisf:-8,formacion:-6},
+       feedback:'La operación se simplificó notablemente y el margen mejoró 12 puntos. Pero los clientes en mercados locales sintieron que Starbucks les daba la espalda: NPS −18, retención −14. En Chile desapareció el maracuyá latte; en México el pan de muerto. La "consistencia de marca" eliminó la razón por la que los clientes locales se identificaban con la cadena.'},
+      {id:'i',name:'Reemplazar baristas con pantallas de autoservicio digitales',
+       desc:'Instalar quioscos de autoservicio en el 60% de las tiendas para reducir tiempos de espera y costos laborales. La tecnología es madura y el ahorro operativo es significativo.',
+       tags:[{t:'Financiera +',c:'delta-pos'},{t:'Procesos +',c:'delta-pos'},{t:'Aprendizaje −−',c:'delta-neg'}],
+       delta:{ingresos:3,margen:13,nps:-16,retencion:-12,calidad:6,ciclo:16,satisf:-24,formacion:-18},
+       feedback:'El margen subió 13 puntos y la eficiencia operativa mejoró. Pero Starbucks no vende solo café — vende la experiencia del barista que te llama por tu nombre. Sin esa interacción, el NPS cayó 16 puntos y la retención −12. Los empleados se sintieron prescindibles: satisfacción −24. El autoservicio funciona en McDonald\'s, no en una marca construida sobre conexión humana.'},
+    ]
+  },
+  hospital:{
+    name:'Hospital San Rafael', sector:'Salud pública · Atención hospitalaria', icon:'ti-building-hospital', color:'#B23A3A',
+    initMetrics:{ingresos:32,margen:4,nps:42,retencion:58,calidad:74,ciclo:48,satisf:39,formacion:35},
+    fmt:(k,v)=>({ingresos:`$${v.toFixed(0)}M`,margen:`${v.toFixed(0)}%`,nps:`${v.toFixed(0)}`,retencion:`${v.toFixed(0)}%`,calidad:`${v.toFixed(0)}%`,ciclo:`${v.toFixed(0)}%`,satisf:`${v.toFixed(0)}%`,formacion:`${v.toFixed(0)}%`}[k]),
+    events:[
+      'Aumenta la lista de espera quirúrgica: medios locales cubren el caso de pacientes esperando meses por una cirugía.',
+      'Brote estacional de influenza satura los servicios de urgencia.',
+      'Una auditoría detecta falencias en protocolos de seguridad del paciente en dos unidades.',
+      'El sindicato de enfermería anuncia un paro por sobrecarga de turnos.',
+      'El Ministerio de Salud ofrece fondos adicionales condicionados a reducir tiempos de espera.',
+    ],
+    decisions:[
+      {id:'a',name:'Contratar más personal de enfermería',
+       desc:'Aumentar la dotación de enfermería en un 15% para aliviar los turnos extendidos. Mejora el clima laboral y la seguridad clínica, pero el presupuesto ya está ajustado al límite.',
+       tags:[{t:'Aprendizaje ++',c:'delta-pos'},{t:'Procesos +',c:'delta-pos'},{t:'Financiera −−',c:'delta-neg'}],
+       delta:{ingresos:-3,margen:-14,nps:8,retencion:5,calidad:10,ciclo:6,satisf:22,formacion:8},
+       feedback:'La sobrecarga de turnos bajó notablemente y el clima laboral mejoró — satisfacción +22, el mayor salto en años. La seguridad clínica también mejoró: menos errores de medicación reportados. Pero el presupuesto, ya ajustado, sufrió un golpe fuerte: margen −14.'},
+      {id:'b',name:'Implementar triage digital en urgencias',
+       desc:'Digitalizar la priorización de pacientes en urgencias para reducir tiempos de espera. Requiere inversión en tecnología y capacitación intensiva del equipo clínico.',
+       tags:[{t:'Procesos ++',c:'delta-pos'},{t:'Clientes +',c:'delta-pos'},{t:'Financiera −',c:'delta-neg'}],
+       delta:{ingresos:-1,margen:-6,nps:14,retencion:8,calidad:6,ciclo:18,satisf:-4,formacion:10},
+       feedback:'Los tiempos de espera en urgencias cayeron cerca de un 25%. El NPS de pacientes subió 14 puntos y el sistema ahora prioriza correctamente los casos críticos. La curva de aprendizaje fue dura para el personal, que reporta cierta fatiga con el nuevo sistema.'},
+      {id:'c',name:'Derivar cirugías electivas al sector privado',
+       desc:'Comprar cupos quirúrgicos en clínicas privadas para aliviar la lista de espera pública. Acción rápida y visible, pero compromete recursos que podrían fortalecer la capacidad interna.',
+       tags:[{t:'Clientes ++',c:'delta-pos'},{t:'Financiera −−',c:'delta-neg'},{t:'Aprendizaje −',c:'delta-neg'}],
+       delta:{ingresos:-8,margen:-16,nps:18,retencion:10,calidad:2,ciclo:12,satisf:-2,formacion:-4},
+       feedback:'La lista de espera bajó de forma visible y los pacientes lo notaron: NPS +18. Pero el costo de comprar cupos privados fue alto — margen −16 — y el hospital no desarrolló capacidad quirúrgica propia a largo plazo.'},
+      {id:'d',name:'Congelar contrataciones y recortar gasto administrativo',
+       desc:'Congelar nuevas contrataciones y reducir gasto en insumos no críticos para equilibrar el presupuesto. Mejora las cuentas en el papel, pero la operación ya estaba al límite.',
+       tags:[{t:'Financiera ++',c:'delta-pos'},{t:'Aprendizaje −−',c:'delta-neg'},{t:'Procesos −',c:'delta-neg'}],
+       delta:{ingresos:1,margen:15,nps:-10,retencion:-6,calidad:-8,ciclo:-10,satisf:-16,formacion:-12},
+       feedback:'El presupuesto mejoró notablemente: margen +15. Pero la operación, ya al límite, empezó a fallar: tiempos de espera más largos, insumos escasos y personal desmotivado. Recortar sin rediseñar procesos suele trasladar el problema, no resolverlo.'},
+      {id:'e',name:'Programa de acreditación en seguridad del paciente',
+       desc:'Invertir en protocolos, capacitación y auditorías internas para lograr la acreditación de calidad. Es un proceso exigente que consume tiempo del equipo clínico.',
+       tags:[{t:'Procesos ++',c:'delta-pos'},{t:'Aprendizaje +',c:'delta-pos'},{t:'Financiera −',c:'delta-neg'}],
+       delta:{ingresos:2,margen:-7,nps:6,retencion:4,calidad:20,ciclo:8,satisf:-2,formacion:14},
+       feedback:'El hospital logró la acreditación — un hito reputacional importante. La calidad clínica medida por indicadores de seguridad subió 20 puntos. El proceso exigió muchas horas del equipo clínico, restando tiempo a otras tareas durante el trimestre.'},
+      {id:'f',name:'Externalizar alimentación y aseo',
+       desc:'Contratar un proveedor externo para reducir costos operativos en servicios no clínicos. Ahorro inmediato, pero el nuevo proveedor no conoce los protocolos hospitalarios.',
+       tags:[{t:'Financiera +',c:'delta-pos'},{t:'Procesos −−',c:'delta-neg'},{t:'Clientes −',c:'delta-neg'}],
+       delta:{ingresos:1,margen:10,nps:-8,retencion:-4,calidad:-10,ciclo:-6,satisf:-6,formacion:-4},
+       feedback:'Los costos operativos bajaron y el margen mejoró 10 puntos. Pero el proveedor externo desconocía los protocolos de higiene hospitalaria: hubo quejas de pacientes y un incidente de contaminación cruzada que generó una alerta interna.'},
+      {id:'h',name:'Lanzar telemedicina para pacientes crónicos',
+       desc:'Ofrecer controles a distancia para pacientes con enfermedades crónicas, liberando horas de consulta presencial. Requiere inversión en plataforma y capacitación médica.',
+       tags:[{t:'Clientes +',c:'delta-pos'},{t:'Procesos +',c:'delta-pos'},{t:'Financiera −',c:'delta-neg'}],
+       delta:{ingresos:3,margen:-5,nps:12,retencion:14,calidad:4,ciclo:14,satisf:6,formacion:10},
+       feedback:'Los pacientes crónicos valoraron no tener que viajar para cada control: retención +14. Se liberaron horas de consulta presencial para casos más urgentes. La adopción del equipo médico fue despareja al inicio, pero mejoró con la capacitación.'},
+      {id:'i',name:'Centralizar la compra de insumos médicos',
+       desc:'Consolidar la adquisición de insumos en un solo proveedor nacional para negociar mejores precios. Ahorra dinero, pero ignora las necesidades específicas de cada unidad clínica.',
+       tags:[{t:'Financiera +',c:'delta-pos'},{t:'Procesos −−',c:'delta-neg'},{t:'Aprendizaje −',c:'delta-neg'}],
+       delta:{ingresos:1,margen:11,nps:-6,retencion:-2,calidad:-12,ciclo:-8,satisf:-10,formacion:-6},
+       feedback:'Los costos de insumos bajaron y el margen mejoró 11 puntos. Pero el proveedor único no siempre tenía el insumo específico que cada unidad necesitaba: hubo desabastecimientos puntuales en pediatría y UCI que afectaron la calidad de atención.'},
+    ]
+  },
+  clinica:{
+    name:'Red Clínica Vitalis', sector:'Salud privada · Red de clínicas', icon:'ti-stethoscope', color:'#1D6FA5',
+    initMetrics:{ingresos:26,margen:12,nps:58,retencion:64,calidad:78,ciclo:60,satisf:52,formacion:38},
+    fmt:(k,v)=>({ingresos:`$${v.toFixed(0)}M`,margen:`${v.toFixed(0)}%`,nps:`${v.toFixed(0)}`,retencion:`${v.toFixed(0)}%`,calidad:`${v.toFixed(0)}%`,ciclo:`${v.toFixed(0)}%`,satisf:`${v.toFixed(0)}%`,formacion:`${v.toFixed(0)}%`}[k]),
+    events:[
+      'La isapre reduce el arancel de reembolso para procedimientos ambulatorios.',
+      'Un nuevo competidor low-cost abre tres sucursales en la misma zona.',
+      'Una encuesta de satisfacción revela quejas recurrentes por tiempos de espera para especialistas.',
+      'Surge la oportunidad de firmar un convenio corporativo de salud ocupacional con una gran organización.',
+      'Una fiscalización detecta cobros duplicados a pacientes — riesgo reputacional.',
+    ],
+    decisions:[
+      {id:'a',name:'Firmar convenio corporativo de salud ocupacional',
+       desc:'Cerrar un contrato con una gran organización para atender a sus trabajadores. Ingresos estables y predecibles, pero satura la agenda de especialistas para los pacientes particulares.',
+       tags:[{t:'Financiera ++',c:'delta-pos'},{t:'Clientes −',c:'delta-neg'},{t:'Procesos −',c:'delta-neg'}],
+       delta:{ingresos:11,margen:6,nps:-6,retencion:-2,calidad:2,ciclo:-8,satisf:2,formacion:2},
+       feedback:'El convenio aseguró ingresos estables por los próximos dos años — margen +6. Pero la agenda de especialistas se saturó y los pacientes particulares empezaron a esperar más para conseguir una hora: NPS −6.'},
+      {id:'b',name:'Invertir en experiencia de paciente premium',
+       desc:'Renovar salas de espera, wifi, cafetería y señalización en todas las sucursales. Mejora la percepción de marca, pero implica una inversión significativa de capital.',
+       tags:[{t:'Clientes ++',c:'delta-pos'},{t:'Financiera −−',c:'delta-neg'},{t:'Procesos +',c:'delta-pos'}],
+       delta:{ingresos:4,margen:-10,nps:16,retencion:10,calidad:2,ciclo:4,satisf:4,formacion:0},
+       feedback:'Los pacientes notaron la diferencia de inmediato: NPS +16. Las reseñas online mejoraron sustancialmente. La inversión, sin embargo, fue alta y el margen cayó 10 puntos en el trimestre.'},
+      {id:'c',name:'Aceptar la baja de aranceles de las isapres',
+       desc:'Aceptar la reducción de aranceles de reembolso propuesta por las aseguradoras para no perder el flujo de pacientes derivados. Protege el volumen, pero reduce el ingreso por atención.',
+       tags:[{t:'Clientes +',c:'delta-pos'},{t:'Financiera −−',c:'delta-neg'},{t:'Procesos ~',c:''}],
+       delta:{ingresos:-6,margen:-9,nps:5,retencion:8,calidad:0,ciclo:0,satisf:-2,formacion:0},
+       feedback:'El flujo de pacientes derivados por isapres se mantuvo estable — retención +8. Pero el menor arancel golpeó directamente el margen: −9 puntos en el trimestre. La aseguradora ahora exige aún más volumen para compensar.'},
+      {id:'d',name:'Implementar telemedicina y agenda online',
+       desc:'Digitalizar la reserva de horas y ofrecer teleconsulta para controles simples. Reduce tiempos muertos y amplía el acceso, pero requiere una curva de adopción del cuerpo médico.',
+       tags:[{t:'Procesos ++',c:'delta-pos'},{t:'Clientes +',c:'delta-pos'},{t:'Aprendizaje −',c:'delta-neg'}],
+       delta:{ingresos:5,margen:3,nps:10,retencion:9,calidad:2,ciclo:16,satisf:-4,formacion:-2},
+       feedback:'La ocupación de horas mejoró notablemente con la agenda online: eficiencia +16. Los pacientes valoraron la teleconsulta para controles simples. Algunos médicos senior mostraron resistencia a adoptar la nueva herramienta.'},
+      {id:'e',name:'Programa de retención para médicos especialistas',
+       desc:'Mejorar condiciones contractuales, tiempo protegido y capacitación continua para especialistas clave. Reduce la fuga de talento hacia la competencia, pero encarece la operación.',
+       tags:[{t:'Aprendizaje ++',c:'delta-pos'},{t:'Procesos +',c:'delta-pos'},{t:'Financiera −',c:'delta-neg'}],
+       delta:{ingresos:2,margen:-8,nps:6,retencion:6,calidad:8,ciclo:4,satisf:18,formacion:16},
+       feedback:'La rotación de especialistas bajó notoriamente y varios médicos que evaluaban irse decidieron quedarse: satisfacción +18. La calidad percibida por los pacientes también mejoró. El costo del programa impactó el margen: −8 puntos.'},
+      {id:'f',name:'Automatizar facturación y reducir personal administrativo',
+       desc:'Recortar dotación administrativa y automatizar la facturación con un nuevo sistema. Ahorra costos fijos, pero la transición genera errores de cobro durante la implementación.',
+       tags:[{t:'Financiera ++',c:'delta-pos'},{t:'Clientes −−',c:'delta-neg'},{t:'Procesos −',c:'delta-neg'}],
+       delta:{ingresos:0,margen:13,nps:-14,retencion:-8,calidad:-2,ciclo:-4,satisf:-6,formacion:-4},
+       feedback:'El margen mejoró notablemente: +13. Pero la transición al nuevo sistema generó cobros duplicados y errores en boletas — exactamente el tipo de incidente que ya había generado una fiscalización. El NPS cayó 14 puntos.'},
+      {id:'h',name:'Abrir una nueva sucursal en zona de alto crecimiento',
+       desc:'Expandir la red con una sucursal nueva en una comuna en expansión demográfica. Alto potencial de crecimiento, pero requiere contratar y formar personal nuevo rápidamente.',
+       tags:[{t:'Financiera +',c:'delta-pos'},{t:'Procesos −−',c:'delta-neg'},{t:'Aprendizaje −',c:'delta-neg'}],
+       delta:{ingresos:9,margen:-4,nps:-4,retencion:-2,calidad:-8,ciclo:-10,satisf:-6,formacion:-8},
+       feedback:'La nueva sucursal capturó demanda rápidamente y los ingresos subieron. Pero el personal recién contratado aún no domina los protocolos internos: la calidad percibida en esa sucursal bajó y afectó el promedio general de la red.'},
+      {id:'i',name:'Centralizar la coordinación clínica en un comité único',
+       desc:'Unificar criterios y protocolos clínicos en un comité central para "estandarizar la calidad" entre sucursales. Suena a buena gobernanza, pero ignora diferencias reales entre centros.',
+       tags:[{t:'Procesos +',c:'delta-pos'},{t:'Aprendizaje −−',c:'delta-neg'},{t:'Clientes −',c:'delta-neg'}],
+       delta:{ingresos:1,margen:4,nps:-8,retencion:-4,calidad:-6,ciclo:2,satisf:-14,formacion:-10},
+       feedback:'Los protocolos se unificaron en el papel. Pero los equipos clínicos de cada sucursal sintieron que perdieron autonomía para adaptar decisiones a su contexto local: satisfacción −14. Algunos especialistas de alto desempeño mostraron señales de descontento con la nueva estructura.'},
+    ]
+  }
+};
+
+let state = null;
+
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+function initState(k){
+  const init={...COMPANIES[k].initMetrics};
+  return {companyKey:k,quarter:1,selected:null,lastDelta:null,lastDecision:null,metrics:{...init},baseMetrics:{...init},usedDecisions:[],shuffledDecisions:shuffle(COMPANIES[k].decisions),done:false};
+}
+function clamp(v,mn,mx){return Math.max(mn,Math.min(mx,v));}
+function metricPct(k,v){
+  const mx={ingresos:80,margen:60,nps:90,retencion:100,calidad:100,ciclo:100,satisf:100,formacion:100};
+  const mn={ingresos:0,margen:-20,nps:-10,retencion:0,calidad:0,ciclo:0,satisf:0,formacion:0};
+  return Math.round(((v-mn[k])/(mx[k]-mn[k]))*100);
+}
+function barColor(p){return p>=68?'#639922':p>=38?'#BA7517':'#A32D2D';}
+function metricScore(){
+  const keys=['ingresos','margen','nps','retencion','calidad','ciclo','satisf','formacion'];
+  const basePct=keys.map(k=>metricPct(k,state.baseMetrics[k])).reduce((a,b)=>a+b,0)/keys.length;
+  const currPct=keys.map(k=>metricPct(k,state.metrics[k])).reduce((a,b)=>a+b,0)/keys.length;
+  return Math.round(100+(currPct-basePct));
+}
+function applyDecision(){
+  if(!state.selected)return;
+  const co=COMPANIES[state.companyKey];
+  const dec=co.decisions.find(d=>d.id===state.selected);
+  const prev={...state.metrics};
+  for(const k in dec.delta) state.metrics[k]=clamp(state.metrics[k]+dec.delta[k],k==='margen'?-20:0,k==='ingresos'?90:k==='nps'?90:100);
+  state.lastDelta={};
+  for(const k in dec.delta) state.lastDelta[k]=state.metrics[k]-prev[k];
+  state.lastDecision=dec;
+  state.usedDecisions.push(state.selected);
+  if(state.quarter>=QUARTERS) state.done=true; else state.quarter++;
+  state.selected=null;
+  render();
+}
+function renderScorecard(){
+  const co=COMPANIES[state.companyKey];
+  return PERSPECTIVES.map(p=>`
+    <div class="sc-card">
+      <div class="sc-card-header">
+        <div class="sc-icon" style="background:${p.iconBg};color:${p.iconColor}"><i class="ti ${p.icon}"></i></div>
+        <span class="sc-label">${p.label}</span>
+      </div>
+      <div class="sc-metrics">
+        ${p.metrics.map(m=>{
+          const v=state.metrics[m.k],pct=metricPct(m.k,v);
+          const ld=state.lastDelta?state.lastDelta[m.k]:null;
+          const dstr=ld!==null&&ld!==0?`<span style="color:${ld>0?'var(--pos)':'var(--neg)'};font-size:10px;margin-left:3px">${ld>0?'+':''}${ld.toFixed(0)}</span>`:'';
+          return `<div class="sc-metric">
+            <span class="sc-metric-name">${m.label}</span>
+            <div style="display:flex;align-items:center">
+              <span class="sc-metric-val">${co.fmt(m.k,v)}${dstr}</span>
+              <div class="bar-wrap"><div class="bar-fill" style="width:${pct}%;background:${barColor(pct)}"></div></div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`).join('');
+}
+function renderDecisions(){
+  return state.shuffledDecisions.map(d=>{
+    const used=state.usedDecisions.includes(d.id);
+    const selected=state.selected===d.id;
+    return `<div class="dec-card${selected?' selected':''}${used?' used':''}"
+      onclick="${used?'':'selectDec(\''+d.id+'\')'}"
+      style="${used?'opacity:0.35;cursor:not-allowed;pointer-events:none;':''}">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:3px">
+        <div class="dec-name">${d.name}</div>
+        ${used?`<span style="font-size:10px;padding:2px 8px;border-radius:20px;background:var(--surface2);color:var(--text3);flex-shrink:0;white-space:nowrap">Ya usada</span>`:''}
+      </div>
+      <div class="dec-desc">${d.desc}</div>
+      <div class="dec-tags">${d.tags.map(t=>`<span class="dec-tag ${t.c}" style="${t.c==='delta-pos'?'background:var(--pos-bg);color:var(--pos)':t.c==='delta-neg'?'background:var(--neg-bg);color:var(--neg)':'background:var(--neu-bg);color:var(--neu)'}">${t.t}</span>`).join('')}</div>
+    </div>`;
+  }).join('');
+}
+function selectDec(id){
+  if(state.usedDecisions.includes(id))return;
+  state.selected=state.selected===id?null:id;
+  render();
+}
+function renderFeedback(){
+  if(!state.lastDecision)return '';
+  const labels={ingresos:'Ingresos',margen:'Margen',nps:'NPS',retencion:'Retención',calidad:'Calidad',ciclo:'Eficiencia',satisf:'Empleados',formacion:'Talento'};
+  const pills=Object.entries(state.lastDelta).filter(([,v])=>v!==0).map(([k,v])=>
+    `<span class="delta-pill ${v>0?'delta-pos':'delta-neg'}">${labels[k]} ${v>0?'+':''}${v.toFixed(0)}</span>`).join('');
+  return `<div class="feedback-box">
+    <div class="feedback-title"><i class="ti ti-info-circle"></i> Resultado del trimestre anterior</div>
+    <div class="feedback-body">${state.lastDecision.feedback}</div>
+    <div class="deltas">${pills}</div>
+  </div>`;
+}
+function renderGame(){
+  const co=COMPANIES[state.companyKey];
+  const ev=co.events[state.quarter-1]||'';
+  return `
+    <div class="header">
+      <span class="company-badge" style="color:${co.color};border-color:${co.color}44">
+        <i class="ti ${co.icon}" style="font-size:14px"></i>
+        ${co.name}&nbsp;<span style="color:var(--text3);font-weight:400">${co.sector}</span>
+      </span>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span style="font-size:12px;font-weight:500;color:var(--text2);background:var(--surface2);border:0.5px solid var(--border2);border-radius:var(--radius-sm);padding:5px 12px;">
+          Trimestre <strong style="color:var(--text)">${state.quarter}</strong> de <strong style="color:var(--text)">${QUARTERS}</strong>
+        </span>
+        <span style="font-size:12px;font-weight:500;color:var(--text2);background:var(--surface2);border:0.5px solid var(--border2);border-radius:var(--radius-sm);padding:5px 12px;">
+          Puntaje CMI: <strong style="font-size:16px;color:${metricScore()>=105?'#3B6D11':metricScore()>=95?'#854F0B':'#A32D2D'}">${metricScore()}</strong>
+        </span>
+      </div>
+    </div>
+    ${renderFeedback()}
+    <div class="scorecard">${renderScorecard()}</div>
+    ${ev?`<div class="event-box">
+      <div class="event-box-title"><i class="ti ti-alert-triangle" style="font-size:13px"></i> Evento del trimestre</div>
+      <div class="event-box-body">${ev}</div>
+    </div>`:''}
+    <button class="apply-btn" onclick="applyDecision()" ${!state.selected?'disabled':''}>
+      ${state.selected?'Aplicar decisión →':'Selecciona una decisión abajo'}
+    </button>
+    <div class="decision-title" style="margin-top:14px">¿Qué decides este trimestre?</div>
+    <div class="decisions-grid">${renderDecisions()}</div>
+    <button class="back-btn" onclick="backToSelector()">← Cambiar organización</button>`;
+}
+function renderGameOver(){
+  const co=COMPANIES[state.companyKey];
+  const score=metricScore();
+  const m=state.metrics;
+  const bm=state.baseMetrics;
+  const grade=score>=115?'Liderazgo ejemplar':score>=105?'Buen desempeño':score>=95?'Resultado aceptable':score>=85?'Organización en riesgo':'Gestión deficiente';
+  const gradeColor=score>=115?'#3B6D11':score>=105?'#185FA5':score>=95?'#854F0B':score>=85?'#993C1D':'#791F1F';
+  const gradeBg=score>=115?'#EAF3DE':score>=105?'#E6F1FB':score>=95?'#FAEEDA':score>=85?'#FAECE7':'#FCEBEB';
+
+  // Per-perspective delta analysis
+  const persp=[
+    {label:'Financiera',icon:'ti-coin',color:'#3B6D11',bg:'#EAF3DE',
+     keys:['ingresos','margen'],names:['Ingresos','Margen']},
+    {label:'Clientes',icon:'ti-users',color:'#185FA5',bg:'#E6F1FB',
+     keys:['nps','retencion'],names:['NPS','Retención']},
+    {label:'Procesos internos',icon:'ti-settings',color:'#854F0B',bg:'#FAEEDA',
+     keys:['calidad','ciclo'],names:['Calidad','Eficiencia']},
+    {label:'Aprendizaje',icon:'ti-plant',color:'#534AB7',bg:'#EEEDFE',
+     keys:['satisf','formacion'],names:['Empleados','Talento']},
+  ];
+
+  function perspScore(keys){
+    const avg=keys.reduce((s,k)=>s+(m[k]-bm[k]),0)/keys.length;
+    return Math.round(avg);
+  }
+
+  function perspStatus(delta){
+    if(delta>=8) return {label:'Mejoró significativamente',color:'#27500A',bg:'#EAF3DE'};
+    if(delta>=2) return {label:'Mejoró levemente',color:'#3B6D11',bg:'#EAF3DE'};
+    if(delta>=-2) return {label:'Sin cambio relevante',color:'#854F0B',bg:'#FAEEDA'};
+    if(delta>=-8) return {label:'Empeoró levemente',color:'#791F1F',bg:'#FCEBEB'};
+    return {label:'Empeoró significativamente',color:'#5A0F0F',bg:'#FCEBEB'};
+  }
+
+  // Identify weakest perspective for improvement tip
+  const perspDeltas=persp.map(p=>({...p,delta:perspScore(p.keys)}));
+  const weakest=perspDeltas.reduce((a,b)=>a.delta<b.delta?a:b);
+  const strongest=perspDeltas.reduce((a,b)=>a.delta>b.delta?a:b);
+
+  const unusedDecisions=state.shuffledDecisions.filter(d=>!state.usedDecisions.includes(d.id));
+
+  const tipMap={
+    'Financiera':'Para mejorar la perspectiva financiera, prioriza decisiones que suban márgenes sin sacrificar demasiado a clientes o procesos. Evita gastos grandes sin impacto directo en ingresos.',
+    'Clientes':'Para mejorar la perspectiva de clientes, elige decisiones que suban NPS y retención. En el CMI, los clientes satisfechos son el puente entre los procesos internos y los resultados financieros.',
+    'Procesos internos':'Para mejorar los procesos, busca decisiones que aumenten calidad y eficiencia operativa. Recuerda que los procesos son el motor que convierte el talento en valor para el cliente.',
+    'Aprendizaje':'Para mejorar aprendizaje y crecimiento, invierte en las personas. Es la perspectiva más rezagada — y también la base que sostiene a todas las demás a largo plazo.',
+  };
+
+  const perspCards=perspDeltas.map(p=>{
+    const st=perspStatus(p.delta);
+    const sign=p.delta>0?'+':'';
+    return `<div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:7px">
+          <div style="width:24px;height:24px;border-radius:6px;background:${p.bg};color:${p.color};display:flex;align-items:center;justify-content:center;font-size:13px">
+            <i class="ti ${p.icon}"></i>
+          </div>
+          <span style="font-size:13px;font-weight:500;color:var(--text)">${p.label}</span>
+        </div>
+        <span style="font-size:11px;padding:2px 9px;border-radius:20px;background:${st.bg};color:${st.color};font-weight:500">${st.label}</span>
+      </div>
+      <div style="display:flex;gap:8px">
+        ${p.keys.map((k,i)=>{
+          const diff=m[k]-bm[k];
+          const s=diff>0?'+':'';
+          return `<div style="flex:1;background:var(--surface2);border-radius:var(--radius-sm);padding:7px 10px;">
+            <div style="font-size:11px;color:var(--text2);margin-bottom:3px">${p.names[i]}</div>
+            <div style="font-size:13px;font-weight:500;color:var(--text)">${co.fmt(k,m[k])}</div>
+            <div style="font-size:11px;color:${diff>=0?'#3B6D11':'#A32D2D'};font-weight:500">${s}${diff.toFixed(0)} vs inicio</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  }).join('');
+
+  const unusedHtml=unusedDecisions.length>0?`
+    <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px">
+      <div style="font-size:11px;font-weight:500;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Decisiones que no usaste</div>
+      ${unusedDecisions.map(d=>`
+        <div style="margin-bottom:6px;padding-bottom:6px;border-bottom:0.5px solid var(--border)">
+          <div style="font-size:12px;font-weight:500;color:var(--text);margin-bottom:2px">${d.name}</div>
+          <div style="font-size:11px;color:var(--text2);line-height:1.4">${d.desc}</div>
+        </div>`).join('')}
+    </div>`:'';
+
+  return `
+    <div style="max-width:640px;margin:0 auto">
+      <!-- Score header -->
+      <div style="text-align:center;padding:1.5rem 0 1.25rem">
+        <div style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:${co.color};background:var(--surface2);border:0.5px solid ${co.color}44;border-radius:var(--radius-sm);padding:4px 12px;margin-bottom:14px">
+          <i class="ti ${co.icon}" style="font-size:14px"></i>${co.name} — Informe final
+        </div>
+        <div style="font-size:48px;font-weight:500;font-family:'DM Mono',monospace;color:${gradeColor};margin-bottom:4px">${score}</div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:10px">puntuación CMI — base 100 = punto de partida</div>
+        <span style="font-size:13px;font-weight:500;padding:5px 14px;border-radius:20px;background:${gradeBg};color:${gradeColor}">${grade}</span>
+      </div>
+
+      <!-- Perspective breakdown -->
+      <div style="font-size:11px;font-weight:500;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Análisis por perspectiva</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">${perspCards}</div>
+
+      <!-- Narrative summary -->
+      <div style="background:var(--surface);border:1.5px solid var(--border2);border-left:4px solid ${gradeColor};border-radius:var(--radius);padding:14px 16px;margin-bottom:10px">
+        <div style="font-size:11px;font-weight:500;color:${gradeColor};text-transform:uppercase;letter-spacing:.05em;margin-bottom:7px">
+          <i class="ti ti-chart-bar" style="font-size:13px;vertical-align:-2px;margin-right:4px"></i>Resumen estratégico
+        </div>
+        <div style="font-size:13px;color:var(--text);line-height:1.65">
+          Tu perspectiva más fuerte fue <strong>${strongest.label}</strong> (${strongest.delta>=0?'+':''}${strongest.delta} puntos promedio).
+          Tu perspectiva más débil fue <strong>${weakest.label}</strong> (${weakest.delta>=0?'+':''}${weakest.delta} puntos promedio).
+          ${score>=105?`Lograste un balance positivo: la mayoría de tus decisiones generaron más valor del que destruyeron. Esto es exactamente lo que busca el CMI — crecimiento equilibrado entre las cuatro perspectivas.`:
+          score>=95?`Tus decisiones se compensaron entre sí. Algunas perspectivas ganaron mientras otras perdieron, resultando en un balance casi neutro. El CMI te habría ayudado a detectar este desequilibrio antes de que fuera tarde.`:
+          `El desequilibrio entre perspectivas fue el problema central. Al priorizar ${strongest.label}, descuidaste ${weakest.label}. En el largo plazo, una organización no puede crecer ignorando ninguna perspectiva del CMI.`}
+        </div>
+      </div>
+
+      <!-- Improvement tip -->
+      <div style="background:#FFFBEB;border:1.5px solid #D97706;border-left:4px solid #D97706;border-radius:var(--radius);padding:14px 16px;margin-bottom:10px">
+        <div style="font-size:11px;font-weight:500;color:#92400E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:7px">
+          <i class="ti ti-bulb" style="font-size:13px;vertical-align:-2px;margin-right:4px"></i>Oportunidad de mejora
+        </div>
+        <div style="font-size:13px;color:#78350F;line-height:1.65">${tipMap[weakest.label]}</div>
+      </div>
+
+      <!-- Unused decisions -->
+      ${unusedHtml}
+
+      <!-- Buttons -->
+      <div class="btn-row" style="margin-top:16px">
+        <button class="btn" onclick="restartSame()">Reintentar con ${co.name} ↺</button>
+        <button class="btn" onclick="backToSelector()">Probar otra organización →</button>
+      </div>
+    </div>`;
+}
+function renderSelector(){
+  const cos=[
+    {key:'hospital',icon:'ti-building-hospital',color:'#B23A3A',name:'Hospital San Rafael',desc:'Salud pública. Listas de espera, seguridad del paciente y presupuesto ajustado.'},
+    {key:'clinica',icon:'ti-stethoscope',color:'#1D6FA5',name:'Red Clínica Vitalis',desc:'Salud privada. Aranceles de isapres, competencia y retención de especialistas.'},
+    {key:'netflix',icon:'ti-device-tv',color:'#E24B4A',name:'Netflix',desc:'Streaming global. Contenido, algoritmos y la guerra por suscriptores.'},
+    {key:'uber',icon:'ti-car',color:'#2C2C2A',name:'Uber',desc:'Plataforma gig. Equilibrio entre conductores, usuarios y reguladores.'},
+    {key:'starbucks',icon:'ti-coffee',color:'#0F6E56',name:'Starbucks',desc:'Retail de experiencia. Marca, baristas y clientes leales.'},
+  ];
+  return `
+    <p class="sel-title">Elige tu organización</p>
+    <div class="selector-grid">
+      ${cos.map(c=>`
+        <div class="sel-card" onclick="startGame('${c.key}')">
+          <div style="font-size:28px;margin-bottom:10px;color:${c.color}"><i class="ti ${c.icon}"></i></div>
+          <div class="sel-name">${c.name}</div>
+          <div class="sel-desc">${c.desc}</div>
+        </div>`).join('')}
+    </div>
+    <p class="hint">5 trimestres · Decisiones únicas por organización · Puntuación CMI al final</p>`;
+}
+function startGame(k){state=initState(k);render();}
+function restartSame(){const k=state.companyKey;state=initState(k);render();}
+function backToSelector(){state=null;render();}
+function render(){
+  document.getElementById('app').innerHTML=
+    !state?renderSelector():state.done?renderGameOver():renderGame();
+}
+render();
+</script>
+<script src="sidebar.js"></script>
+</body>
+</html>
