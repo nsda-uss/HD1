@@ -20,8 +20,12 @@
     --gold-deep: #93691f;
     --slate: #5c6670;
     --slate-deep: #3f4750;
+    --wine: #7a3b46;
+    --wine-deep: #5c2c35;
     --forest: #2f6b4f;
     --forest-deep: #234f3a;
+    --clay: #a8562e;
+    --clay-deep: #7e401f;
     --line: #d7dfe1;
     --muted: #5c6b70;
   }
@@ -66,6 +70,13 @@
     color: var(--navy-deep);
     letter-spacing: -0.01em;
   }
+  .instructions {
+    margin-top: 20px;
+    font-size: 0.98rem;
+    color: var(--muted);
+    max-width: 62ch;
+  }
+  .instructions p + p { margin-top: 10px; }
 
   /* -------- tool cards -------- */
   .tool-grid {
@@ -91,7 +102,9 @@
   .tool-card.gold::before { background: var(--gold); }
   .tool-card.indigo::before { background: var(--navy); }
   .tool-card.slate::before { background: var(--slate); }
+  .tool-card.wine::before { background: var(--wine); }
   .tool-card.forest::before { background: var(--forest); }
+  .tool-card.clay::before { background: var(--clay); }
 
   .tool-eyebrow {
     font-family: 'IBM Plex Mono', monospace;
@@ -104,7 +117,9 @@
   .tool-card.gold .tool-eyebrow { color: var(--gold-deep); }
   .tool-card.indigo .tool-eyebrow { color: var(--navy); }
   .tool-card.slate .tool-eyebrow { color: var(--slate-deep); }
+  .tool-card.wine .tool-eyebrow { color: var(--wine-deep); }
   .tool-card.forest .tool-eyebrow { color: var(--forest-deep); }
+  .tool-card.clay .tool-eyebrow { color: var(--clay-deep); }
 
   .tool-card h3 { font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 600; color: var(--navy-deep); margin-bottom: 4px; }
   .tool-card .tool-tag { font-size: 0.8rem; color: var(--muted); font-style: italic; margin-bottom: 14px; }
@@ -120,7 +135,9 @@
   .tool-card.gold .tool-btn { background: var(--gold); }
   .tool-card.indigo .tool-btn { background: var(--navy); }
   .tool-card.slate .tool-btn { background: var(--slate-deep); }
+  .tool-card.wine .tool-btn { background: var(--wine-deep); }
   .tool-card.forest .tool-btn { background: var(--forest-deep); }
+  .tool-card.clay .tool-btn { background: var(--clay-deep); }
   .tool-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
   .tool-btn:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
 </style>
@@ -129,7 +146,12 @@
 
 <main>
   <div class="eyebrow">MGTO BA01 · Habilidades Directivas I</div>
-  <h1>Herramientas Interactivas del Módulo</h1>
+  <h1>Instrumentos y herramientas del módulo</h1>
+
+  <div class="instructions">
+    <p>Completa los siguientes instrumentos de autodiagnóstico para identificar el rol que aportas a un equipo de trabajo y el estilo con el que ejerces liderazgo. Ingresa tu nombre real en cada uno: tu resultado queda disponible en la vista de equipo del curso, visible para el resto de tus compañeros/as.</p>
+    <p>Puedes completarlos en el orden que prefieras. Responde con honestidad, pensando en tu comportamiento habitual y no en el que te gustaría tener.</p>
+  </div>
 
   <div class="tool-grid">
 
@@ -155,6 +177,22 @@
       <div class="tool-tag">Dominante · Influyente · Estable · Concienzudo</div>
       <p class="desc">Identifica tu tendencia de comportamiento en el trabajo: ¿decides con rapidez, motivas al equipo, sostienes la calma o cuidas el detalle?</p>
       <a class="tool-btn" href="disc_test.html">Iniciar test DISC →</a>
+    </div>
+
+    <div class="tool-card clay">
+      <div class="tool-eyebrow">Herramienta de coordinación</div>
+      <h3>Contrato de Equipo</h3>
+      <div class="tool-tag">Norma de comunicación, decisión y conflicto</div>
+      <p class="desc">Acuerden por escrito cómo van a comunicarse, decidir y resolver conflictos como equipo, antes de que aparezca el primer desacuerdo.</p>
+      <a class="tool-btn" href="contrato_equipo.html">Completar contrato de equipo →</a>
+    </div>
+
+    <div class="tool-card wine">
+      <div class="tool-eyebrow">Actividad colaborativa</div>
+      <h3>Encuesta de Curso</h3>
+      <div class="tool-tag">3 características clave</div>
+      <p class="desc">Aporta 3 características clave sobre el tema de la sesión y luego revisa cómo respondió el resto del curso.</p>
+      <a class="tool-btn" href="encuesta_tema.html">Ir a la encuesta →</a>
     </div>
 
     <div class="tool-card forest">

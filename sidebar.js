@@ -4,8 +4,8 @@
  *
  * Este es el ÚNICO lugar donde se define el markup, los estilos y los
  * enlaces de la barra lateral. Todas las páginas del sitio (index.html,
- * belbin_test.html, liderazgo_test.html, disc_test.html) cargan este
- * mismo archivo, por lo que cualquier cambio futuro (agregar un
+ * belbin_test.html, liderazgo_test.html, disc_test.html,
+ * contrato_equipo.html) cargan este mismo archivo, por lo que cualquier cambio futuro (agregar un
  * instrumento, cambiar un ícono, renombrar una sección) se hace una
  * sola vez, aquí, y se refleja automáticamente en todo el sitio.
  */
@@ -34,6 +34,12 @@
       label: 'DISC',
       title: 'Test DISC de Comportamiento',
       icon: '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>'
+    },
+    {
+      href: 'contrato_equipo.html',
+      label: 'Contrato',
+      title: 'Contrato de Equipo',
+      icon: '<path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c1.5 0 2.92.37 4.17 1.02"/><path d="M16 5l3 3-3 3"/>'
     },
     {
       href: 'simulador_cmi.html',
